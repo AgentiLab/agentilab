@@ -1,0 +1,139 @@
+# AgentiLab Ultra Web Crawler
+
+## Overview
+An advanced AI-powered web crawler with intelligent parsing, semantic analysis, and real-time progress visualization. Built with React, TypeScript, Playwright, and OpenAI GPT-5.
+
+## Features
+
+### Core Functionality
+- **Intelligent Web Crawling**: Recursive crawling with Playwright for JavaScript-rendered content
+- **AI-Powered Analysis**: OpenAI GPT-5 integration for automatic content summarization and insights
+- **Real-Time Updates**: WebSocket-based live progress tracking and log streaming
+- **Advanced Configuration**: Depth control, page limits, rate limiting, domain/keyword filtering
+- **Multi-Format Export**: JSON, CSV, and Markdown export options
+- **Metadata Extraction**: Titles, descriptions, Open Graph tags, headings, links, and images
+
+### Technical Stack
+- **Frontend**: React 18 + TypeScript + Tailwind CSS + shadcn/ui
+- **Backend**: Node.js + Express + WebSocket
+- **Crawler**: Playwright (headless Chromium) + Cheerio (HTML parsing)
+- **AI**: OpenAI GPT-5 for semantic analysis
+- **Storage**: In-memory storage (MemStorage)
+
+## Architecture
+
+### Data Flow
+1. User enters URL and configuration in frontend
+2. WebSocket sends crawl:start message to backend
+3. Backend creates crawl session and launches Playwright browser
+4. Crawler recursively visits pages, extracting content and links
+5. Each page is analyzed by OpenAI GPT-5 for summary, themes, and insights
+6. Real-time updates sent via WebSocket (logs, progress, pages)
+7. Frontend displays live progress, logs, and results
+8. User can export results in JSON/CSV/Markdown
+
+### WebSocket Messages
+- `crawl:start` - Start a new crawl session
+- `crawl:stop` - Stop active crawl
+- `session:update` - Session status update
+- `page:crawled` - New page crawled
+- `log:entry` - New log entry
+- `progress:update` - Progress statistics update
+
+### API Endpoints
+- `GET /api/sessions/:id` - Get session details
+- `GET /api/sessions/:id/pages` - Get crawled pages
+- `GET /api/sessions/:id/logs` - Get session logs
+- `GET /api/sessions/:id/export?format=json|csv|markdown` - Export results
+
+## Design System
+
+### AgentiLab.ai Theme
+- **Primary Color**: #3B82F6 (Blue) - Active states, links
+- **Accent Color**: #14B8A6 (Teal) - Success, highlights
+- **Background**: #0A0A0A (Near black)
+- **Cards**: #141414 (Elevated surfaces)
+- **Fonts**: Inter (UI), JetBrains Mono (code/URLs)
+
+### Key UI Components
+1. **URL Input Card**: Large input with advanced config panel
+2. **Progress Dashboard**: 4 stat cards (total, crawled, pending, errors)
+3. **Progress Bar**: Animated gradient bar with real-time updates
+4. **Log Viewer**: Terminal-style with color-coded levels
+5. **Results Grid**: Card-based layout with AI summaries
+6. **Export Controls**: Format selector and download button
+
+## Development
+
+### Environment Variables
+- `OPENAI_API_KEY` - OpenAI API key for GPT-4o (required)
+- `SESSION_SECRET` - Session secret (auto-generated)
+
+### Running Locally
+```bash
+npm install
+npm run dev
+```
+
+Application runs on port 5000 by default.
+
+### Deployment Notes
+- **Playwright Auto-Installation**: The app automatically installs Playwright Chromium browsers on first run if not present
+- **System Dependencies**: Required Nix packages are configured in `.replit` (at-spi2-core, cups, libdrm, mesa, nss, X11 libs)
+- **Build Process**: `npm run build` builds frontend (Vite) and backend (esbuild)
+- **Production Start**: `npm run start` runs the bundled production server
+- When deploying, the server will check for Playwright browsers and install them if missing
+
+### Key Files
+- `shared/schema.ts` - Data models and types
+- `server/services/crawler.ts` - Playwright-based crawler
+- `server/services/openai.ts` - AI analysis service
+- `server/routes.ts` - API endpoints and WebSocket server
+- `client/src/pages/home.tsx` - Main UI component
+- `client/src/hooks/useWebSocket.ts` - WebSocket hook
+
+## User Guide
+
+### Starting a Crawl
+1. Enter a starting URL (e.g., https://example.com)
+2. (Optional) Configure advanced settings:
+   - Max Depth: How deep to crawl (1-10)
+   - Max Pages: Maximum pages to crawl (1-1000)
+   - Rate Limit: Delay between requests (100-5000ms)
+   - Domain/Keyword filters
+3. Click "Start Crawl"
+4. Monitor progress in real-time via dashboard and logs
+5. View results in the Results tab
+6. Export data in your preferred format
+
+### Understanding Results
+Each crawled page includes:
+- **Title & URL**: Page identification
+- **AI Summary**: GPT-5 generated summary
+- **Page Type**: Detected page type (homepage, product, article, etc.)
+- **Tonality**: Content tone (commercial, informative, etc.)
+- **Themes**: Key topics identified
+- **Keywords**: Extracted keywords
+- **Word Count**: Total words on page
+- **Depth**: Crawl depth level
+- **Status**: Success or error
+
+### Export Formats
+- **JSON**: Structured data with full metadata
+- **CSV**: Tabular format for spreadsheets
+- **Markdown**: Human-readable documentation
+
+## Recent Changes
+- Initial release with full MVP features
+- Implemented AI-powered content analysis
+- Added real-time WebSocket updates
+- Created responsive dark-themed UI
+- Built export functionality (JSON/CSV/Markdown)
+
+## Future Enhancements
+- PostgreSQL persistence for crawl history
+- Vector embeddings for semantic search
+- robots.txt and sitemap.xml detection
+- Parallel crawling with worker threads
+- Crawl scheduling and background jobs
+- Advanced filters and search capabilities

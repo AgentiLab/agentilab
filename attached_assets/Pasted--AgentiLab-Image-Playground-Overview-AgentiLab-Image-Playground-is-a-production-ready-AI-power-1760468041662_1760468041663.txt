@@ -1,0 +1,183 @@
+# AgentiLab Image Playground
+
+## Overview
+
+AgentiLab Image Playground is a production-ready AI-powered Progressive Web App built with React and Express. The application leverages OpenAI's DALL-E 3 model to create high-quality images from text prompts, providing users with an intuitive interface to generate, edit, compare, and manage AI-created artwork. The application features a comprehensive suite of tools including remix mode, style presets, comparison view, advanced image editing (crop, filters, annotations), and full PWA support with offline capabilities. Built with mobile-first responsive design and a premium dark-themed UI following the AgentiLab brand guidelines.
+
+## User Preferences
+
+Preferred communication style: Simple, everyday language.
+
+## System Architecture
+
+### Frontend Architecture
+
+**Framework & Build System**
+- React with TypeScript for type-safe component development
+- Vite as the build tool and development server for fast HMR (Hot Module Replacement)
+- Wouter for lightweight client-side routing
+- Component architecture follows composition patterns with clear separation of concerns
+
+**UI Component System**
+- shadcn/ui components built on Radix UI primitives for accessibility
+- Custom design system with "New York" style variant
+- Tailwind CSS for utility-first styling with custom theme configuration
+- Design tokens defined for consistent spacing, colors, and typography
+- Three primary font families: Space Grotesk (headings), Inter (body), JetBrains Mono (technical/code)
+
+**State Management**
+- TanStack Query (React Query) for server state management and caching
+- Local React state for UI interactions
+- Form state managed with React Hook Form and Zod validation
+- Browser storage for prompt history (mentioned in design docs)
+
+**Design Patterns**
+- Mobile-first responsive design with breakpoint-based layouts
+- Dark-first color scheme with gradient accents (primary blue #3B82F6, accent teal #14B8A6)
+- Loading states with branded animation sequences using Framer Motion
+- Hover and active elevation effects for interactive feedback
+
+### Backend Architecture
+
+**Server Framework**
+- Express.js with TypeScript for type-safe API development
+- ESM module system for modern JavaScript features
+- Custom middleware for request logging and error handling
+- Development and production build configurations
+
+**API Design**
+- RESTful endpoints for image generation and retrieval
+- POST `/api/generate-image` - Creates new images via DALL-E 3
+- GET `/api/images` - Retrieves stored image generations
+- Request validation using Zod schemas
+- Structured error responses with appropriate HTTP status codes
+
+**Storage Strategy**
+- Abstract storage interface (IStorage) for flexibility
+- In-memory storage implementation for development
+- Schema designed for PostgreSQL with Drizzle ORM
+- Support for future database migration via Drizzle Kit
+
+### Data Storage Solutions
+
+**Database Schema (PostgreSQL Ready)**
+- `users` table - User authentication (id, username, password)
+- `image_generations` table - Generated image records with metadata
+  - Stores prompt, size, quality, image URL, revised prompt
+  - UUID primary keys with automatic generation
+  - Timestamp tracking for creation dates
+
+**ORM & Migrations**
+- Drizzle ORM for type-safe database queries
+- Drizzle Kit configured for schema migrations
+- Zod integration for runtime validation and type inference
+- Connection to Neon serverless PostgreSQL
+
+**Session Management**
+- Express session configuration with connect-pg-simple for PostgreSQL session store
+- Prepared for cookie-based session handling
+
+### External Dependencies
+
+**AI Services**
+- OpenAI API for DALL-E 3 image generation
+- Supports three image sizes: 1024x1024, 1024x1792, 1792x1024
+- Two quality modes: standard and HD
+- Handles revised prompts returned by the AI model
+
+**Database**
+- Neon Serverless PostgreSQL (via @neondatabase/serverless)
+- Connection pooling and serverless-optimized queries
+- Environment-based configuration via DATABASE_URL
+
+**UI Libraries**
+- Radix UI primitives for 20+ accessible components
+- Framer Motion for animations and loading sequences
+- Embla Carousel for image galleries
+- Lucide React for consistent iconography
+- date-fns for timestamp formatting
+
+**Development Tools**
+- Replit-specific plugins for development banner and error overlay
+- Cartographer plugin for enhanced development experience
+- TypeScript for compile-time type checking
+- ESBuild for production bundling
+
+**Styling & Design**
+- Tailwind CSS with custom configuration
+- PostCSS with Autoprefixer
+- CSS custom properties for theme variables
+- class-variance-authority for component variants
+- clsx and tailwind-merge for conditional class composition
+
+### Progressive Web App (PWA) Features
+
+**PWA Configuration**
+- Manifest.json with AgentiLab branding and icons
+- Standalone display mode for app-like experience
+- Theme colors: Primary #3B82F6, Background #0f172a
+- PNG icons (192x192, 512x512) with gradient branding
+
+**Offline Support**
+- Service worker with intelligent caching strategies
+- Network-first for API calls with cache fallback
+- Cache-first for static assets (images, scripts, fonts)
+- Automatic cache cleanup on updates
+
+**Install Experience**
+- Custom branded install prompt
+- Auto-detection of standalone mode
+- Dismissal persistence via localStorage
+- iOS and Android support with Apple touch icons
+
+**Dark-First Theme**
+- Default dark mode applied on load
+- Custom CSS variables for light/dark themes
+- Tailwind dark mode class strategy
+- Background: #0f172a (dark slate)
+
+### Advanced Features
+
+**Remix Mode**
+- Clone existing images with editable parameters
+- Visual reference card showing original image
+- Pre-filled prompt, size, and quality settings
+- Automatic state clearing after generation
+
+**Style Presets**
+- 9 artistic style options (Photorealistic, Cinematic, Artistic, etc.)
+- Transparent prompt enhancement
+- Adapted for DALL-E 3 API constraints
+
+**Comparison View**
+- Multi-select mode for side-by-side analysis
+- Synchronized scrolling and zoom
+- Selection persistence across sessions
+- Auto-closing on deselection
+
+**Image Editing Tools**
+- Crop with preset aspect ratios (Free, 1:1, 16:9, 4:3, 3:2)
+- Filter presets (brightness, contrast, saturation, blur)
+- Annotation tools (text, arrows, shapes)
+- High-quality export with full resolution
+- State reset on image change
+
+### User Experience Enhancements
+
+**Documentation Dropdown**
+- In-app documentation accessible via BookOpen icon in header
+- Contextual help for all major features
+- English language documentation with icon-based visual guides
+- Covers: Image generation, Remix mode, Editor tools, Comparison view, PWA installation
+
+### Recent Updates (October 2025)
+
+- ✅ PWA implementation with offline caching
+- ✅ Dark mode applied by default
+- ✅ Image editing suite with crop, filters, and annotations
+- ✅ Comparison view for multi-image analysis
+- ✅ Style presets for enhanced prompts
+- ✅ Remix mode for iterative generation
+- ✅ Service worker for offline functionality
+- ✅ Branded PNG icons for PWA installation
+- ✅ In-app documentation dropdown with feature guides

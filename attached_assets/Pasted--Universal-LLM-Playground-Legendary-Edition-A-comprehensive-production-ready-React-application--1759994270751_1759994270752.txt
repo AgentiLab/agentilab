@@ -1,0 +1,244 @@
+# Universal LLM Playground - Legendary Edition
+
+A comprehensive, production-ready React application for testing, benchmarking, and comparing multiple LLM providers with advanced features. Built with direct HTTP API calls (no SDKs) for maximum transparency and control.
+
+## Overview
+
+The Universal LLM Playground provides a unified interface to interact with multiple Large Language Model providers:
+- **OpenAI** (o3, o1, o3 Mini, o4 Mini, GPT-5, GPT-5 Mini, GPT-5 Nano, GPT-4o, GPT-4o Mini, GPT-4.1, GPT-4.1 Mini, GPT-4.1 Nano)
+- **Anthropic** (Claude Sonnet 4.5, Claude Sonnet 4, Claude 3.7 Sonnet, Claude 3.5 Sonnet, Claude Opus 4.1, Claude Opus 4)
+- **Mistral AI** (Mistral 7B, Mixtral 8x22B, Mistral Small 2407, Mistral Small 3.1, Mistral Large 2411, Mistral Large Latest, Mistral Medium 2505, Mistral Embed, Codestral Embed, Pixtral Large 2411)
+- **Groq** (Mixtral 8x7B)
+- **xAI** (Grok Code Fast 1, Grok 4 Fast Reasoning, Grok 4 Fast Non-Reasoning, Grok 4 0709, Grok 3 Mini, Grok 3)
+
+## Legendary Features (October 2025)
+
+### 🔥 1. Side-by-Side Model Comparison
+- Compare 2-4 models simultaneously with synchronized streaming
+- Real-time performance metrics (latency, tokens) for each model
+- Perfect for A/B testing and benchmarking
+- Toggle comparison mode with Cmd/Ctrl+M shortcut
+
+### 💾 2. Conversation History & Management
+- Persistent conversation storage with Zustand + localStorage
+- Search and filter saved conversations
+- Quick conversation switching in sidebar
+- Auto-save with timestamps and model tracking
+
+### ⚙️ 3. Advanced Parameters (FULLY FUNCTIONAL)
+- **Temperature** (0-2): Controls randomness in responses
+- **Top-P** (0-1): Nucleus sampling for diversity
+- **Max Tokens**: Limit response length per model
+- **System Prompt**: Custom instructions for model behavior
+- All parameters properly forwarded to all providers (OpenAI, Anthropic, Mistral, Groq, xAI)
+- Reset to defaults with one click
+
+### 📚 4. Prompt Templates Library
+- 15+ pre-built templates across 5 categories:
+  - Code (Review, Debug, Refactor, Documentation, Test)
+  - Writing (Blog, Email, Story, Marketing)
+  - Analysis (Data, Research, Competitive)
+  - Creative (Brainstorm, Naming)
+  - Business (Proposal, Strategy)
+- Custom template creation and management
+- One-click template insertion
+
+### 📤 5. Export & Sharing
+- Export conversations as Markdown, JSON, or PDF
+- Shareable links for conversations
+- Copy to clipboard functionality
+- Full conversation context preservation
+
+### 📊 6. Analytics & Benchmarking Dashboard
+- Performance metrics visualization with Recharts
+- Provider comparison charts (latency, tokens, cost)
+- Usage statistics and trends
+- Model performance over time
+
+### 🖼️ 7. Vision & Multimodal Support
+- Image upload for vision-capable models
+- Multiple image support per message
+- Preview and management of uploaded images
+- Base64 encoding for API compatibility
+
+### ⌨️ 8. Keyboard Shortcuts
+- **Cmd/Ctrl+K**: New conversation
+- **Cmd/Ctrl+M**: Toggle comparison mode
+- **Cmd/Ctrl+Enter**: Send message
+- Visual shortcut hints throughout UI
+
+### 🎨 9. Custom Themes & Presets
+- 6 preset themes (Professional, Ocean, Forest, Sunset, Midnight, Rose)
+- Custom theme editor with real-time preview
+- Light/dark mode for each theme
+- Theme persistence across sessions
+
+### 🤖 10. Advanced AI Features
+- **Regenerate**: Re-run last prompt with same model
+- **Edit & Re-execute**: Modify messages and regenerate responses
+- **Continue**: Extend incomplete responses
+- **Auto-Summarize**: One-click conversation summarization
+
+## Core Features
+
+### Backend Proxy Architecture
+- Backend Express server proxies all LLM API calls to avoid CORS issues
+- Real-time token-by-token streaming through backend proxy
+- Structured error handling with provider, status, and message details
+- Robust error parsing (JSON/text) with fallback mechanisms
+- Model-specific max token configurations (64K for Sonnet models, 32K for Opus models)
+
+### Multi-Provider Support
+- Modular architecture with provider-specific implementations
+- Each provider has dedicated files for endpoint logic and streaming parsers
+- API key management with local storage persistence
+- Validation tools for each provider's API keys
+
+### Modern UI & UX
+- Clean, modern light design inspired by Notion, Linear, and Stripe
+- Mobile-responsive with adaptive bottom navigation
+- Desktop header navigation with theme toggle (light/dark)
+- Real-time streaming display with typewriter effect
+- **Markdown Support**: Full markdown rendering in chat messages (code blocks, lists, links, formatting) via react-markdown + remark-gfm
+- **Smooth Animations**: Fade-in/slide-in animations for messages, gradient effects on empty states
+- **Enhanced Chat Input**: Auto-resizing textarea, character counter, rounded modern design, loading spinner during streaming
+- **Smart Model Selection**: Provider-grouped selector with sticky headers, "No key" badges for unavailable models, automatic fallback to available models, empty state placeholder when no API keys configured
+- **Mobile-Optimized**: Chat input positioned above bottom navigation (bottom-16) with proper z-index layering
+
+### Developer Tools
+- Complete request/response logging with metrics
+- JSON viewer with syntax highlighting
+- Performance tracking (latency, token count)
+- Model documentation viewer with API specs
+
+## Architecture
+
+### Project Structure
+
+```
+client/src/
+├── components/          # Reusable UI components
+│   ├── ApiKeyCard.tsx
+│   ├── BottomNav.tsx
+│   ├── ChatInput.tsx
+│   ├── Header.tsx
+│   ├── JsonViewer.tsx
+│   ├── ModelSelector.tsx
+│   ├── StreamingOutput.tsx
+│   ├── ThemeToggle.tsx
+│   ├── ComparisonView.tsx      # Side-by-side model comparison
+│   ├── ConversationSidebar.tsx # Conversation history sidebar
+│   ├── AdvancedSettings.tsx    # Advanced parameters panel
+│   ├── TemplatesLibrary.tsx    # Prompt templates component
+│   ├── ExportDialog.tsx        # Export conversation dialog
+│   ├── ConversationSummarizer.tsx # AI summarization
+│   ├── ThemePicker.tsx         # Theme customization
+│   └── VisionUpload.tsx        # Image upload for vision models
+├── data/                # Static data
+│   └── defaultTemplates.ts     # Pre-built prompt templates
+├── models/              # Provider-specific implementations
+│   ├── openai.ts
+│   ├── anthropic.ts
+│   ├── mistral.ts
+│   ├── groq.ts
+│   └── xai.ts
+├── pages/               # Application pages
+│   ├── PlaygroundPage.tsx
+│   ├── ApiKeysPage.tsx
+│   ├── LogsPage.tsx
+│   ├── DocsPage.tsx
+│   ├── AnalyticsPage.tsx       # Performance analytics dashboard
+│   ├── TemplatesPage.tsx       # Templates management
+│   └── SettingsPage.tsx        # Advanced settings & themes
+├── store/               # State management
+│   └── usePlaygroundStore.ts   # Zustand store with all state
+├── utils/               # Helper functions
+│   └── streamParser.ts
+└── App.tsx              # Main application with routing
+server/
+├── routes.ts            # Backend proxy routes for all LLM providers
+├── storage.ts           # Storage interface (client-side only app)
+└── index.ts             # Express server setup
+shared/
+└── schema.ts            # Shared types and model configurations
+```
+
+### Technology Stack
+
+- **Frontend**: React 18 + TypeScript + Vite
+- **UI Components**: shadcn/ui + Radix UI
+- **Styling**: Tailwind CSS with custom technical color system
+- **State Management**: Zustand with localStorage persistence
+- **Routing**: Wouter (lightweight)
+- **Syntax Highlighting**: react-syntax-highlighter
+- **Icons**: Lucide React
+
+### Design System
+
+**Color Palette** (Light Mode Default):
+- Background: Pure white (#ffffff)
+- Card Surface: White with subtle borders
+- Primary: Modern vibrant blue (HSL: 212 100% 48%)
+- Success: Fresh green for active states
+- Text: Dark blue-gray with clear hierarchy
+
+**Typography**:
+- Sans: Inter Variable
+- Monospace: JetBrains Mono (for code/JSON)
+
+**Spacing**: Consistent 4px base unit system
+
+## Development
+
+### Running the Application
+
+```bash
+npm run dev
+```
+
+The application runs on port 5000 with Vite's hot module replacement.
+
+### Adding New Providers
+
+1. Create a new model file in `client/src/models/[provider].ts`
+2. Implement streaming function and validation
+3. Add parser in `client/src/utils/streamParser.ts`
+4. Add provider to `shared/schema.ts` in `availableModels`
+5. Add icon to `providerIcons` mapping
+
+### State Management
+
+All state is managed through Zustand store (`usePlaygroundStore`):
+- **API keys** (persisted to localStorage)
+- **Request logs** (last 100 entries with full metrics)
+- **Selected model** preference with automatic fallback
+- **Conversations** - persistent conversation history with search
+- **Model parameters** - temperature, top-p, max tokens, system prompt
+- **Comparison mode** - selected models for comparison (2-4)
+- **Templates** - custom and default prompt templates
+- **Analytics data** - performance metrics and usage statistics
+- **Custom theme** - user-defined color schemes
+- **Zero-Key Handling**: When all API keys are removed, selectedModel automatically resets to empty string, triggering appropriate empty state UI with guidance to add keys
+
+### Recent Updates (October 2025)
+
+**Critical Fix - Advanced Parameters Integration**:
+- All provider streaming functions now accept optional parameters: `maxTokens`, `temperature`, `topP`, `systemPrompt`
+- PlaygroundPage and ComparisonView properly forward parameters from the store to all providers
+- Consistent parameter handling across OpenAI, Anthropic, Mistral, Groq, and xAI
+- Default values: temperature (0.7-1.0 per provider), topP (1.0), with graceful fallbacks
+
+## Security
+
+- API keys are stored exclusively in browser localStorage
+- Backend proxy forwards API calls to LLM providers without storing keys
+- Keys are transmitted securely from frontend to backend for each request
+- Structured error responses prevent information leakage
+- CORS issues resolved through backend proxy architecture
+
+## User Preferences
+
+- **Theme**: Light mode default (modern, clean aesthetic) with dark mode toggle
+- **Persistence**: All API keys and logs stored locally
+- **Navigation**: Bottom tabs on mobile, top nav on desktop
+- **Design**: Clean, minimalist with modern blue accents

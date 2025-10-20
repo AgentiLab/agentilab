@@ -1,0 +1,93 @@
+FinSight - Real-Time Financial Intelligence Platform
+
+## Overview
+FinSight is a next-generation financial visualization platform built with React and Express, aiming to provide a TradingView-level experience for analyzing global markets, stocks, ETFs, and macroeconomic indicators. It integrates real-time market data with AI-powered insights to support traders, analysts, and investors. The platform's business vision is to empower users with comprehensive, real-time financial intelligence, offering a significant market potential for informed decision-making in financial markets.
+
+## User Preferences
+- Dark mode by default (optimized for financial analysis)
+- Clean, professional interface inspired by TradingView
+- Mobile-responsive design
+- Fast data loading with React Query caching
+- PostgreSQL persistence for all user data
+
+## System Architecture
+
+### UI/UX Decisions
+The platform features a dark-first UI design for a professional financial terminal aesthetic, optimized for extended viewing. It includes a light/dark theme toggle and a responsive design for all device types. Consistent spacing, typography (Inter for UI, JetBrains Mono for financial figures), and a defined color scheme (Professional blue, Financial green for bullish, Financial red for bearish) are used across the application. Shadcn UI components with Tailwind CSS are utilized for a robust and customizable design system.
+
+### Technical Implementations
+FinSight is a full-stack application.
+**Frontend:** Developed with React and TypeScript, using Wouter for routing, TanStack Query for data fetching, Recharts for visualizations, Shadcn UI for components, and Lucide React for icons.
+**Backend:** Built on Express.js, using PostgreSQL with Drizzle ORM for data persistence. It integrates with FinancialModelingPrep API for market data, OpenAI GPT-5 and Anthropic Claude Sonnet for AI insights and sentiment analysis, and includes an alert monitoring system.
+
+### Feature Specifications
+
+**Phase 1-3 Features (COMPLETED):**
+- **Real-Time Market Data:** Live quotes, historical charts, and market movers (gainers, losers).
+- **Stock Search & Discovery:** Autocomplete search for various asset classes.
+- **Company Fundamentals:** Detailed company profiles and key financial metrics.
+- **AI-Powered Insights:** GPT-5 and Claude Sonnet provide market analysis, trend forecasting, sentiment analysis, risk assessment, and opportunity identification.
+- **Watchlist Management:** Personal watchlist with real-time updates.
+- **Macro Dashboard:** Visual display of key economic indicators.
+- **Financial Analysis:** Complete financial statements (income, balance sheet, cash flow), comprehensive financial ratios (liquidity, profitability, leverage), insider trading activity tracking.
+- **Market Intelligence:** Analyst coverage with ratings and price targets, institutional holdings data, earnings calendar with upcoming reports.
+- **Valuation Tools:** Stock screener with customizable filters, peer comparison analysis, DCF valuation calculator.
+
+**Phase 4 Features (COMPLETED):**
+- **News Feed:** Real-time stock news with sentiment analysis, article filtering by date, social media sentiment integration, color-coded sentiment indicators.
+- **Advanced Charts:** Technical indicators including RSI (Relative Strength Index), MACD (Moving Average Convergence Divergence), Bollinger Bands with standard deviation, interactive charts with tooltips and data overlays.
+- **Portfolio Tracker:** Holdings management with add/remove functionality, real-time P&L calculation using live quotes, position-level and portfolio-level performance metrics, visual gain/loss indicators, automatic market value updates.
+
+**Phase 5 Features (COMPLETED):**
+- **Multi-Chart Analysis (TradingView-Style):** Professional charting interface supporting up to 6 symbols simultaneously, multiple view modes (individual charts, overlay comparison, grid layout), comprehensive technical indicators (RSI, MACD, Bollinger Bands, Volume), timeframe selection (1D, 1W, 1M, 3M, 1Y, 5Y), normalized percentage comparison for multi-symbol analysis, color-coded symbol tracking, interactive charts with tooltips and legends.
+- **Multi-Asset Class Coverage:** Dedicated pages for Global Indices (S&P 500, NASDAQ, DAX, Nikkei, etc.), Commodities (Gold, Oil, Natural Gas, Agriculture), Forex (EUR/USD, GBP/USD, major currency pairs), and Cryptocurrencies (Bitcoin, Ethereum, major altcoins) with real-time price updates and performance indicators.
+
+**Phase 6 Features (COMPLETED):**
+- **Asset Detail Pages:** Individual detail pages for all asset types (indices, commodities, forex, crypto) with three chart types (Area, Line, OHLC), multiple timeframes (1W, 1M, 3M, 1Y, 5Y), real-time quote data, high/low prices, and market cap for crypto.
+- **Enhanced Chart Styling:** Professional TradingView-inspired chart design with improved colors, tooltips, animations, proper spacing, and responsive layout. Charts feature gradient fills, smooth animations (800ms), enhanced grid lines, and formatted date labels.
+- **Interactive Mini Charts:** Each asset category page now displays a default ticker chart with dropdown selector for quick symbol switching, timeframe buttons, and direct link to detailed view. Users can immediately see what the data looks like without clicking through.
+
+**Phase 7 Features (COMPLETED):**
+- **AI Report Generator (Ultra-Détaillé avec Génération Parallèle):** Système révolutionnaire de génération de rapports financiers avec architecture parallèle pour des performances optimales. 
+  - **Génération Parallèle Claude Sonnet 4.5:** Utilise 5 appels Claude simultanés (Promise.all) pour générer 10 sections en 8-12 secondes au lieu de 30-45 secondes séquentiellement
+  - **Collecte de Données Exhaustive:** Agrège automatiquement toutes les données disponibles (quote, profile, key metrics, ratios 3 ans, états financiers 3 ans, price targets, analyst recs, institutional holdings, earnings calendar, 10 news articles avec sentiment)
+  - **Personnalisation Utilisateur:** Champ nom utilisateur obligatoire, rapport personnalisé avec badge "Rapport généré pour: [nom]" et inclusion dans le PDF
+  - **10 Sections Ultra-Détaillées:** Chaque section contient 3-5 paragraphes substantiels (Résumé Exécutif, Présentation Entreprise, Analyse Financière, Ratios, Valorisation, Sentiment Marché/Analystes, Détentions Institutionnelles, Actualités/Catalyseurs, Risques, Opportunités/Recommandations)
+  - **Export PDF Professionnel:** Génération PDF avec jspdf incluant toutes les sections, nom utilisateur, pagination, et branding agentilab.ai
+  - **4 Types de Rapports:** Ticker analysis (ultra-détaillé), market overview, sector analysis, custom reports
+  - **Architecture Claude:** Model claude-sonnet-4-20250514, 4000 tokens/appel, temperature 0.7, gestion automatique du markdown JSON
+  - **Interface Intuitive:** Page /ai-report avec formulaire guidé, prévisualisation en temps réel, export PDF en un clic
+
+### System Design Choices
+The project is structured into `client/`, `server/`, and `shared/` directories. The `client/` handles UI components, pages, and utility functions. The `server/` manages API integrations, business logic, and database interactions. The `shared/` directory defines database schemas and TypeScript types for consistency. The architecture emphasizes modularity, scalability, and maintainability.
+
+## Implementation Status
+
+**Completed Phases (1-4):**
+- ✅ Phase 1: Core market data, search, AI insights, watchlist, macro dashboard
+- ✅ Phase 2: Financial statements, ratios, insider trading
+- ✅ Phase 3: Analyst coverage, institutional holdings, earnings calendar, stock screener, peers comparison, DCF valuation
+- ✅ Phase 4: News feed with sentiment, advanced technical charts (RSI/MACD/Bollinger), portfolio tracker with P&L
+
+**Completed (Phase 5-7):**
+- ✅ Phase 5: Multi-chart TradingView-style analysis with multi-symbol support, global indices, commodities, forex, and crypto pages
+- ✅ Phase 6: Asset detail pages with interactive charts, enhanced chart styling, mini charts with ticker selection on all category pages
+- ✅ Phase 7: AI Report Generator with PDF export, comprehensive data aggregation, and multiple report types
+
+**API Integration Stats:**
+- 19 FinPrep API methods implemented across all phases
+- 32+ backend routes covering all feature areas (including asset quote and historical data endpoints, AI report generation)
+- 19 pages with full navigation integration (Dashboard, Markets, Watchlist, Portfolio, Financials, Ratios, Insider Trading, Analyst Coverage, Institutional Holdings, Earnings Calendar, Stock Screener, Peers Comparison, DCF Valuation, News Feed, Advanced Charts, Multi-Chart Analysis, Global Indices, Commodities, Forex, Crypto, Asset Detail, AI Report Generator)
+
+**Database Schema:**
+- PostgreSQL with Drizzle ORM for type-safe persistence
+- Tables: watchlist, priceAlerts, portfolioHoldings
+- All user data persisted with proper relationships and constraints
+
+## External Dependencies
+- **FinancialModelingPrep API:** Provides real-time market data, historical data, company fundamentals, market movers, news with sentiment, analyst data, institutional holdings, earnings calendar, technical indicators, and economic indicators.
+- **OpenAI GPT-5:** Used for AI-powered market analysis, trend forecasting, and sentiment analysis.
+- **Anthropic Claude Sonnet 4.5 (claude-sonnet-4-20250514):** Moteur principal pour la génération de rapports AI ultra-détaillés. Utilise une architecture parallèle avec 5 appels simultanés pour générer des analyses professionnelles complètes en 8-12 secondes. Chaque appel génère 2 sections détaillées avec contexte financier exhaustif.
+- **PostgreSQL:** The primary database for persistent storage of user data such as watchlists, portfolio holdings, and price alerts, managed with Drizzle ORM.
+- **Recharts:** Advanced charting library for technical indicators and market data visualization.
+- **jsPDF:** Professional PDF generation library for exporting AI-generated reports with proper formatting, pagination, and branding.

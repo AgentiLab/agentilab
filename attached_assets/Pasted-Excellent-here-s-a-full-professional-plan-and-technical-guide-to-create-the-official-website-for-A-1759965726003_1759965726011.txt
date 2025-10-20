@@ -1,0 +1,214 @@
+Excellent — here’s a full professional plan and technical guide to create the official website for AgentiLab.ai, in English, entirely built with React 18 + TypeScript + Vite + Tailwind + shadcn/ui, ready for mobile and desktop.
+
+⸻
+
+🌐 Website Overview: AgentiLab.ai
+
+Purpose:
+AgentiLab.ai is an AI development firm that designs, builds, and deploys advanced AI-driven tools and web applications.
+The website should reflect innovation, clarity, and professionalism, and highlight the firm’s portfolio of projects across domains like finance, productivity, communication, and research.
+
+⸻
+
+🏗️ Project Structure (Arborescence)
+
+agentilab-website/
+├── index.html
+├── vite.config.ts
+├── tsconfig.json
+├── package.json
+├── src/
+│   ├── main.tsx
+│   ├── App.tsx
+│   ├── routes/
+│   │   ├── Home.tsx
+│   │   ├── About.tsx
+│   │   ├── Projects.tsx
+│   │   ├── ProjectDetail.tsx
+│   │   ├── Contact.tsx
+│   ├── components/
+│   │   ├── Navbar.tsx
+│   │   ├── Footer.tsx
+│   │   ├── HeroSection.tsx
+│   │   ├── ProjectCard.tsx
+│   │   ├── Section.tsx
+│   ├── data/
+│   │   └── projects.ts
+│   ├── assets/
+│   │   ├── logo.svg
+│   │   ├── background.jpg
+│   │   └── screenshots/
+│   └── styles/
+│       └── globals.css
+└── README.md
+
+
+⸻
+
+⚙️ Tech Stack
+	•	React 18 + TypeScript → UI logic and modular structure
+	•	Vite → Fast bundler for development
+	•	Tailwind CSS → Modern responsive styling
+	•	shadcn/ui + Radix UI → Accessible, polished components (cards, buttons, modals)
+	•	React Router v6 → Multi-page navigation
+	•	Framer Motion → Subtle animations
+	•	Mobile-first design → Optimized layout for smartphones
+
+⸻
+
+🧩 Core Pages
+
+1. Home Page (Home.tsx)
+	•	Hero section: slogan like “Building the Future of AI Software”
+	•	Brief company overview
+	•	Featured projects section (cards linking to details)
+	•	CTA: “Explore Our Work” → /projects
+
+2. About Page (About.tsx)
+	•	Mission statement
+	•	Vision: “To democratize AI development and accelerate intelligent tool creation.”
+	•	Small team section (photos, bios)
+	•	Technology stack overview
+
+3. Projects Page (Projects.tsx)
+
+Displays all projects dynamically from src/data/projects.ts.
+
+Each card includes:
+	•	Project name
+	•	Short description
+	•	Tech stack (React, Node, GPT-5, etc.)
+	•	Link to project page
+
+Example entries:
+
+export const projects = [
+  {
+    id: 'securechat',
+    title: 'SecureChat',
+    description: 'An encrypted AI-powered messaging app with private channels and real-time emoji reactions.',
+    tech: ['React', 'PostgreSQL', 'GPT-5'],
+    link: '/projects/securechat'
+  },
+  {
+    id: 'vibelab',
+    title: 'VibeLab',
+    description: 'A creative AI playground that generates React apps and visual dashboards in real time.',
+    tech: ['Vite', 'Anthropic Claude', 'Framer Motion'],
+    link: '/projects/vibelab'
+  },
+  {
+    id: 'passvault',
+    title: 'PassVault',
+    description: 'A password manager powered by local encryption and smart suggestions.',
+    tech: ['Electron', 'TypeScript', 'AES Encryption'],
+    link: '/projects/passvault'
+  },
+]
+
+4. Project Detail Page (ProjectDetail.tsx)
+	•	Dynamic route /projects/:id
+	•	Loads data from projects.ts
+	•	Sections:
+	•	Overview
+	•	Tech stack
+	•	Screenshots
+	•	“Visit Project” button (if link exists)
+
+5. Contact Page (Contact.tsx)
+	•	Simple contact form with validation
+	•	Email link (e.g., contact@agentilab.ai)
+	•	Optionally add form submission with Formspree or simple backend route
+
+⸻
+
+🧠 UI Components
+
+Component	Purpose
+Navbar	Fixed top bar with links to all pages
+HeroSection	Eye-catching homepage intro
+ProjectCard	Dynamic project preview
+Section	Reusable layout wrapper for spacing
+Footer	Copyright + contact info
+
+
+⸻
+
+🎨 Styling & Design Guidelines
+	•	Theme: Dark mode by default, light toggle optional
+	•	Font: Inter or Space Grotesk via Google Fonts
+	•	Colors:
+	•	Primary: #3B82F6 (blue)
+	•	Accent: #14B8A6 (teal)
+	•	Background: #0F172A
+	•	Text: #F1F5F9
+	•	Animations: Subtle fade-ins on scroll using Framer Motion
+	•	Responsiveness:
+	•	Use Tailwind’s grid/flex classes for columns
+	•	Collapse navbar into a hamburger menu on mobile
+
+⸻
+
+📱 Mobile Adaptation
+	•	Hamburger navigation using @radix-ui/react-dropdown-menu
+	•	Grid of project cards becomes single-column
+	•	CTA buttons occupy full width
+	•	Optimized for 360px width screens
+
+⸻
+
+⚡ Deployment
+	1.	Build
+
+npm run build
+
+
+	2.	Preview
+
+npm run preview
+
+
+	3.	Deploy Options
+	•	Vercel (recommended)
+	•	Netlify
+	•	GitHub Pages
+
+⸻
+
+🚀 Example Hero Section JSX (simplified)
+
+export function HeroSection() {
+  return (
+    <section className="flex flex-col items-center justify-center text-center py-20 bg-gradient-to-b from-slate-900 to-slate-800 text-white">
+      <h1 className="text-5xl font-bold mb-4">AgentiLab.ai</h1>
+      <p className="text-lg max-w-xl">
+        We design intelligent systems and next-generation AI tools that empower developers, researchers, and creators.
+      </p>
+      <a href="/projects" className="mt-6 bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-lg">
+        Explore Our Projects
+      </a>
+    </section>
+  );
+}
+
+
+⸻
+
+🧭 Next Steps
+	1.	Initialize project
+
+npm create vite@latest agentilab-website -- --template react-ts
+cd agentilab-website
+npm install tailwindcss framer-motion react-router-dom @radix-ui/react-dropdown-menu @shadcn/ui
+npx tailwindcss init -p
+
+
+	2.	Add the pages in src/routes/
+	3.	Add routing in App.tsx using React Router
+	4.	Style with Tailwind & shadcn/ui
+	5.	Deploy to Vercel
+
+⸻
+
+Would you like me to generate the full React code project (folder + files) next — ready to copy into your IDE?
+I can output Phase 1 (directory + setup) and then sequentially each file (App.tsx, Navbar.tsx, etc.) with clean, smartphone-ready design.

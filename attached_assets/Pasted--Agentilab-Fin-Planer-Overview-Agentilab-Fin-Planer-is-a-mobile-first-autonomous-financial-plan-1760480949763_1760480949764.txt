@@ -1,0 +1,166 @@
+# Agentilab Fin Planer
+
+## Overview
+Agentilab Fin Planer is a mobile-first autonomous financial planning application powered by Claude Sonnet 4.5, providing intelligent portfolio management, goal planning, and AI-driven financial insights. The application integrates with Financial Modeling Prep API for real-time market data and Exa Search API for financial research and tax information.
+
+## Project Architecture
+
+### Tech Stack
+- **Frontend**: React 18 + TypeScript + Vite + Tailwind CSS + shadcn/ui
+- **Backend**: Node.js + Express + In-Memory Storage
+- **AI Agent**: Claude Sonnet 4.5 (Anthropic API)
+- **External APIs**:
+  - Financial Modeling Prep (FinPrep) - Market data, stock prices, ETF information
+  - Exa Search - Financial research, tax rules, macroeconomic insights
+- **Data Visualization**: Recharts
+- **Animations**: Framer Motion
+
+### Design System
+- **Theme**: Dark mode optimized for financial data
+- **Primary Colors**:
+  - Blue: `217 91% 60%` (#3B82F6)
+  - Teal: `173 80% 40%` (#14B8A6)
+  - Success Green: `142 71% 45%`
+  - Danger Red: `0 84% 60%`
+  - AI Purple: `280 65% 60%`
+- **Typography**: Inter (primary), JetBrains Mono (financial numbers)
+- **Spacing**: Consistent use of 4, 6, 8, 12, 16 units
+
+## Application Structure
+
+### Pages
+1. **Dashboard** (`/`) - Net worth overview, AI insights, smart alerts, financial health score
+2. **Portfolio** (`/portfolio`) - Asset allocation, holdings, rebalancing advisor, tax optimization
+3. **Goals** (`/goals`) - Financial goal planning with progress tracking
+4. **Market** (`/market`) - Real-time market intelligence with indices, gainers, losers, sectors
+5. **Agent** (`/agent`) - AI financial advisor chat interface
+6. **Analysis** (`/analysis`) - Financial projections (1yr, 5yr, 20yr) with growth scenarios
+7. **Help** (`/help`) - Complete user guide and documentation
+
+### Data Models
+- **User Profile**: Age, income, risk tolerance, investment horizon
+- **Assets**: Stocks, ETFs, crypto, cash holdings with real-time prices
+- **Portfolio History**: Historical performance tracking
+- **Goals**: Financial objectives with target amounts and dates
+- **Market Data**: Cached API responses for stock/ETF information
+- **Conversations**: AI agent chat history
+
+## API Integration
+
+### Financial Modeling Prep API
+- **Base URL**: `https://financialmodelingprep.com/api/v3/`
+- **Key Endpoints**:
+  - `/profile/{symbol}` - Company profile
+  - `/quote/{symbol}` - Real-time stock quote
+  - `/etf/{symbol}` - ETF information
+  - `/historical-price-full/{symbol}` - Historical prices
+  - `/quotes/index` - Major market indices (S&P 500, Dow Jones, Nasdaq)
+  - `/stock_market/gainers` - Top performing stocks
+  - `/stock_market/losers` - Worst performing stocks
+  - `/sector-performance` - Sector performance data
+- **API Key**: `FIN_PREP_API_KEY` environment variable
+
+### Exa Search API
+- **Base URL**: `https://api.exa.ai/`
+- **Key Endpoints**:
+  - `/search` - Neural search for financial topics
+  - `/contents` - Extract content from URLs
+- **API Key**: `EXA_API_KEY` environment variable
+
+### Anthropic Claude API
+- **Model**: `claude-sonnet-4-20250514`
+- **Use Cases**:
+  - Portfolio analysis and recommendations
+  - Financial planning assistance
+  - Goal tracking insights
+  - Tax optimization strategies
+  - Automatic AI Insights generation (3-4 actionable insights based on user's financial situation)
+- **API Key**: `ANTHROPIC_API_KEY` environment variable
+- **Features**:
+  - Streaming responses for chat interface
+  - JSON-formatted insights for Dashboard cards
+  - Defensive parsing with fallback for invalid responses
+
+## Features
+
+### MVP Features
+1. ✅ Mobile-first responsive dashboard
+2. ✅ Interactive portfolio visualization with charts
+3. ✅ Financial goal planner with progress tracking
+4. ✅ AI agent console with streaming chat
+5. ✅ Financial projection simulator (1yr/5yr/20yr)
+6. ✅ Real-time market data integration (FinPrep)
+7. ✅ AI-powered financial research (Exa Search)
+8. ✅ Claude Sonnet 4.5 autonomous agent with streaming responses
+
+### Legendary Features (Advanced)
+1. ✅ **Market Intelligence Dashboard** - Real-time market data with indices (S&P 500, Dow Jones, Nasdaq), top gainers/losers, sector performance
+2. ✅ **AI Insights** - Automatic portfolio analysis and personalized recommendations by Claude Sonnet 4.5
+3. ✅ **Smart Alerts** - Intelligent notifications for goals near completion, portfolio changes, diversification alerts
+4. ✅ **Portfolio Rebalancing Advisor** - Smart suggestions based on risk tolerance (conservative/moderate/aggressive)
+5. ✅ **Tax Optimization Center** - Personalized tax strategies including loss harvesting, capital gains, retirement accounts
+6. ✅ **Help & Documentation** - Complete user guide accessible via header dropdown
+
+### Future Enhancements
+- Monte Carlo simulation for stress testing
+- Markowitz portfolio optimization
+- Conversational "what-if" scenarios
+- CSV/Excel import/export
+- Weekly coach notifications
+- Bank account API integration
+
+## Development Guidelines
+
+### Design Principles
+- **Trust Through Clarity**: Financial data must be instantly readable
+- **Mobile-First Precision**: Touch targets minimum 44x44px
+- **Data Hierarchy**: Critical metrics prominently displayed
+- **Calm Intelligence**: AI suggestions helpful, never intrusive
+
+### Component Standards
+- Use shadcn/ui components exclusively
+- Financial numbers always use `font-mono` class
+- Cards use `p-6` padding, `border-border` for borders
+- Loading states use skeleton animations
+- All interactive elements have `data-testid` attributes
+
+### State Management
+- TanStack Query v5 for server state
+- Local state with useState/useReducer
+- No global state management (single user app)
+
+## Environment Variables
+```
+ANTHROPIC_API_KEY=<your-key>
+FIN_PREP_API_KEY=<your-key>
+EXA_API_KEY=<your-key>
+```
+
+## Recent Changes
+- **2025-10-14**: Legendary Features Implementation - Advanced Market Intelligence & AI
+  - ✅ Market Intelligence Dashboard with real-time data from FinPrep API (indices, gainers/losers, sectors)
+  - ✅ AI Insights card on Dashboard with automatic portfolio analysis by Claude Sonnet 4.5
+  - ✅ Smart Alerts system for goals progress, portfolio concentration, and milestone notifications
+  - ✅ Portfolio Rebalancing Advisor with risk-based allocation suggestions
+  - ✅ Tax Optimization Center with personalized tax strategies (loss harvesting, capital gains, retirement)
+  - ✅ Help/Documentation page with complete user guide accessible via header dropdown
+  - ✅ Comprehensive error handling with API key validation and user-friendly messages
+  - ✅ All components work gracefully with missing profile data (default to moderate risk)
+  - ✅ E2E tests passing for all new features
+- **2025-10-14**: Complete implementation of Agentilab Fin Planer MVP
+  - Fixed critical query client bug where non-string query keys were breaking API calls
+  - Implemented all backend API routes with FinPrep and Exa Search integration
+  - Built Claude Sonnet 4.5 AI agent with streaming responses and financial tools
+  - Created financial projection calculator with optimistic/realistic/pessimistic scenarios
+  - Fixed TypeScript type errors in storage layer and frontend hooks
+  - All 5 pages fully functional with data visualization and real-time updates
+- **2025-01-14**: Initial project setup with complete schema and all frontend pages
+  - All pages designed with dark theme, responsive layouts, and Framer Motion animations
+  - Bottom navigation implemented for mobile-first experience
+  - Recharts integration for portfolio and projection visualizations
+
+## Notes
+- Single-user application (no authentication required)
+- All data stored in-memory for MVP (will migrate to PostgreSQL later)
+- Dark mode is the primary theme (no light mode toggle in MVP)
+- Mobile-first design with progressive enhancement for tablets/desktop

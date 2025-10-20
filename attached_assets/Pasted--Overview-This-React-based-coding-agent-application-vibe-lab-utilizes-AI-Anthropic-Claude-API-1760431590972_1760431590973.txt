@@ -1,0 +1,92 @@
+## Overview
+This React-based coding agent application, "vibe-lab," utilizes AI (Anthropic Claude API, branded as "Vibe Agent") to generate complete React web projects in real-time. It streams LLM responses, dynamically creating folder structures and file contents, which users can monitor live. The application features a mobile-first design, real-time code streaming visualization, terminal-style logging, an automated build error correction system, and a secure sandbox environment for project previews. It supports generating various React applications, including dashboards, e-commerce sites, blogs, portfolios, and task managers, leveraging modern libraries like React Router, Zustand, React Query, Recharts, Framer Motion, and React Hook Form.
+
+## User Preferences
+Preferred communication style: Simple, everyday language.
+
+## System Architecture
+
+### Frontend
+**Framework**: React 18 with TypeScript and Vite.
+**UI/Styling**: shadcn/ui (Radix UI) and Tailwind CSS with a dark theme.
+**State Management**: React Context API for global agent state, TanStack Query for server state, `useState`/`useReducer` for local state.
+**Routing**: Wouter with the following routes:
+  - `/` - HomePage: Main interface with AI chat and project generation
+  - `/projects` - ProjectsPage: List of all generated projects with management options
+  - `/project/:projectName` - ProjectLandingPage: Detailed project presentation with file tree and preview
+  - `/info` - InfoPage: Application information and documentation
+**Design**: Mobile-first, responsive design with custom hooks, mobile navigation, and a collapsible sidebar.
+**Key Components**: `FileTree`, `CodeViewer`, `Terminal`, `PromptModal`, `MobileNavigation`, `ProjectLandingPage`.
+
+### Backend
+**Server Framework**: Express.js with TypeScript.
+**File System**: Server-side file writing to `generated_projects/` with recursive directory creation and a project saving endpoint (`POST /api/projects/save`).
+**Build Pipeline**: Vite for frontend to `dist/public`, esbuild for backend to `dist/index.js`.
+
+### Data Storage
+**Database**: PostgreSQL via Neon serverless driver.
+**ORM**: Drizzle ORM.
+**Schema**: Includes `users`, `projects`, and `generation_logs` tables.
+**Validation**: Zod schemas generated from Drizzle.
+
+### Authentication System
+**Purpose**: Secure user authentication with password recovery.
+**Architecture**:
+- **Backend**: Passport.js with local strategy, bcrypt for password hashing, express-session with PostgreSQL store.
+- **Frontend**: React Context API (`AuthProvider`), TanStack Query for auth state management.
+**Security Features**: Password hashing, recovery key generation, session-based authentication, protected routes.
+
+### Auto-Fix System
+**Purpose**: Automated build error correction using AI (Vibe Agent) with support for modern React libraries.
+**Architecture**: `BuildManager` orchestrates build attempts; `POST /api/anthropic/fix` endpoint powered by Claude API for error analysis and correction.
+**Flow**: Build failure triggers AI analysis, which uses `read_file`, `update_file`, `replace_in_file`, `search_in_files`, `list_directory`, and `run_command` tools to fix issues.
+**Retry Logic**: Up to 5 auto-fix attempts with exponential backoff.
+**Security**: Path traversal protection, sandboxed file operations, whitelisted command execution.
+**AI Configuration (Updated Oct 2025)**: 10 conversation turns (up from 5), 16K tokens (up from 8K), temperature 0.2 for deterministic fixes.
+**Intelligence Features**: Intelligent error classification (MISSING_MODULE, WRONG_IMPORT, TYPE_ERROR, JSX_ERROR, VITE_CONFIG), automated suspect file detection with full path normalization, context-aware guidance hints, root cause prioritization over symptom fixes.
+**Features**: Real-time streaming of auto-fix messages, visual diff highlighting for changes, library-aware error handling, smart dependency management.
+
+### Preview Sandbox System
+**Purpose**: Secure environment for previewing generated projects.
+**Architecture**: Custom `sandbox.html` page; `/sandbox/:projectName` route serves sandbox with security headers; `/preview/:projectName/*` route serves static build files.
+**Security**: Iframe sandbox attributes, Content Security Policy.
+
+### Database Management System
+**Purpose**: Integrated PostgreSQL database management for generated projects requiring data persistence.
+**Architecture**: One Neon PostgreSQL database per generated project with automated Drizzle ORM setup including schema, migrations, and seeding.
+**Backend Endpoints**: Provides APIs for schema retrieval, initialization, status checks, and table data preview.
+**Security**: Credentials stored in project secrets, SQL injection protection, SELECT-only queries.
+
+### Project Loading Optimization (Lazy Loading)
+**Problem Solved**: Reduced load times for large existing projects.
+**Backend**: Excludes `node_modules`, `dist`; `GET /api/projects/:projectName/tree` for file paths; `GET /api/projects/:projectName/file/*` for on-demand file content loading.
+**Frontend**: Uses `/tree` for initial load; `CodeViewer` implements concurrency-safe lazy loading with `AbortController`.
+
+### Auto-Build on Project Load
+**Purpose**: Automatically build unbuilt projects when loaded, enabling immediate preview without manual intervention.
+**Architecture**: `buildService.ts` provides reusable `triggerProjectBuild` function; `ProjectsPage.tsx` checks build status via `/api/projects/:projectName/preview-status` and triggers auto-build if `isBuilt: false`.
+**Flow**: Load project → Check build status → If unbuilt: switch to terminal view → trigger build → if build fails: auto-fix activates → retry build → set preview URL on success.
+**Features**: Seamless integration with existing auto-fix system, real-time streaming of build logs to terminal, automatic preview URL activation on successful build.
+
+### Background Generation & Auto-Reconnect
+**Purpose**: Persistent generation that continues when users navigate away, with automatic reconnection on return.
+**Architecture**: `GenerationJobManager` handles autonomous generation; `useAutoReconnect` hook checks `/api/jobs/active` on app load and reconnects to running jobs.
+**Flow**: Generate project → user can quit → generation continues in background → user returns → auto-reconnects to active job → displays progress.
+**Features**: SSE streaming for real-time updates, project name tracking (not UUIDs), seamless resume experience.
+
+### Project Landing Pages
+**Purpose**: Professional presentation pages for each generated project with interactive file exploration and preview access.
+**Architecture**: `ProjectLandingPage.tsx` component accessible via `/project/:projectName` route; displays project metadata, file tree, and sandbox preview link.
+**Features**:
+  - **Interactive File Tree**: Expandable/collapsible directory structure with click-to-view file content
+  - **Code Viewer**: Displays file content with proper formatting when files are selected
+  - **Sandbox Link**: Direct access to project preview (if built) with "View in Sandbox" button
+  - **Branding**: "Generated by AgentiLab" footer on all landing pages
+  - **Error Handling**: Distinguishes 404 errors from network failures; supports partial data loading; provides clear retry mechanisms
+  - **Toast Notifications**: User feedback for file loading errors with descriptive messages
+**Access**: Info button (ℹ️) next to each project in the projects list
+
+## External Dependencies
+**AI Integration**: Anthropic Claude API (claude-sonnet-4-20250514 model) for code generation and auto-fix.
+**Database Hosting**: Neon Serverless PostgreSQL (`@neondatabase/serverless`).
+**Session Management**: `connect-pg-simple` for PostgreSQL-backed Express sessions.

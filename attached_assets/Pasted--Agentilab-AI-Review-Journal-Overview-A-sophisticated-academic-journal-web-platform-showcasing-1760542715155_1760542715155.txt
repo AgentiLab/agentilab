@@ -1,0 +1,140 @@
+# Agentilab AI Review Journal
+
+## Overview
+
+A sophisticated academic journal web platform showcasing cutting-edge AI research, cognitive architectures, prompting science, and autonomous agent design by the Agentilab Collective. The platform features a dark-first design with vibrant blue (#3B82F6) and teal (#14B8A6) accents on a deep charcoal background (#0F172A).
+
+## Project Architecture
+
+### Frontend Stack
+- **Framework**: React with TypeScript
+- **Routing**: Wouter for client-side navigation
+- **Styling**: Tailwind CSS with custom design tokens
+- **UI Components**: Shadcn UI component library
+- **Animations**: Framer Motion for smooth transitions and page animations
+- **State Management**: TanStack Query (React Query) for server state
+- **Typography**: Inter (body/UI), Poppins (headings), JetBrains Mono (code)
+
+### Backend Stack
+- **Server**: Express.js
+- **Storage**: In-memory storage (MemStorage) for article and author data
+- **API**: RESTful endpoints for articles and authors
+- **Validation**: Zod schemas for type-safe data validation
+
+### Design System
+
+**Colors:**
+- Primary: #3B82F6 (Vibrant Blue) - HSL: 217 91% 60%
+- Accent: #14B8A6 (Teal) - HSL: 172 94% 38%
+- Background: #0F172A (Deep Charcoal) - HSL: 222 47% 9%
+- Default theme: Dark mode with light mode support
+
+**Typography:**
+- Headings: Poppins (600, 700 weights)
+- Body: Inter (400, 500, 600 weights)
+- Code: JetBrains Mono
+
+**Key Design Principles:**
+- Academic authority meets modern tech aesthetics
+- Reading-first experience optimized for long-form content
+- Smooth Framer Motion animations throughout
+- Fully responsive with mobile-first approach
+- Glass-morphism effects on navigation
+
+## Data Schema
+
+### Article
+- `id`: Unique identifier
+- `title`: Article title
+- `abstract`: Article summary
+- `content`: Full article content (Markdown format)
+- `category`: One of: Editorial Letter, Research Articles, Applied Studies, AI Perspectives, Community Highlights
+- `tags`: Array of tags for filtering
+- `authorIds`: Array of author IDs
+- `publishDate`: Publication date
+- `pdfUrl`: PDF download link
+- `readTime`: Estimated reading time
+
+### Author
+- `id`: Unique identifier
+- `name`: Author name
+- `photo`: Avatar URL
+- `bio`: Author biography
+
+## Pages & Routes
+
+1. **Home (/)**: Hero section with mission statement, stats, and latest 6 articles
+2. **Browse (/browse)**: Full archive with category and tag filtering
+3. **Article Detail (/article/:id)**: Full article with interactive TOC, smooth scroll, author bios
+4. **404 (/*)**: Custom not found page with navigation options
+
+## Key Features
+
+### Article Browsing
+- Grid layout with article cards showing title, abstract, authors, tags
+- Category filtering (5 categories with color coding)
+- Tag-based filtering system
+- Responsive grid (1 col mobile, 2 col tablet, 3 col desktop)
+
+### Article Reading Experience
+- Interactive table of contents with smooth scroll
+- Active section highlighting
+- Author information cards with avatars
+- PDF download functionality
+- Tag navigation
+- Mobile-optimized typography
+
+### Animations
+- Staggered fade-in animations for article cards
+- Smooth page transitions
+- Hover elevations on interactive elements
+- Scroll-triggered active states
+
+### Responsive Design
+- Mobile-first approach
+- Breakpoints: 768px (tablet), 1024px (desktop)
+- Touch-friendly UI on mobile
+- Optimized reading experience on all devices
+
+## Sample Data
+
+The application includes 7 seed articles covering:
+- Autonomous agent frameworks
+- Prompt engineering methodologies
+- Applied studies (SecureChat implementation)
+- AI ethics and perspectives
+- Community contributions
+- Editorial content
+
+Authors include researchers, engineers, and AI models (Claude Sonnet 4.5).
+
+## Development Workflow
+
+1. **Start Application**: `npm run dev` (starts Express + Vite dev server)
+2. **Port**: 5000 (both frontend and backend)
+3. **Hot Reload**: Enabled for both client and server
+
+## API Endpoints
+
+- `GET /api/articles` - Get all articles
+- `GET /api/articles/:id` - Get article by ID
+- `GET /api/authors` - Get all authors
+- `GET /api/authors/:id` - Get author by ID
+
+## Recent Changes
+
+**2025-01-20**: Initial implementation
+- Created complete data schema for articles and authors
+- Built all React components with exceptional visual quality
+- Implemented dark-first design system with Agentilab branding
+- Added Framer Motion animations throughout
+- Created responsive navigation with search
+- Built article cards with category/tag filtering
+- Implemented article detail page with interactive TOC
+- Added smooth scroll and active section highlighting
+- Configured theme provider for dark/light mode support
+
+## Mission Statement
+
+"Bridging creativity and rigor — the Agentilab AI Review Journal is where experimentation meets reproducibility."
+— Agentilab Editorial Board

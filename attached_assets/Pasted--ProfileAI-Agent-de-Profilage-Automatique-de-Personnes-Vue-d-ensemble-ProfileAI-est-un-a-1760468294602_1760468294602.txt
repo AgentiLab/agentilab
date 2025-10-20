@@ -1,0 +1,208 @@
+# ProfileAI - Agent de Profilage Automatique de Personnes
+
+## Vue d'ensemble
+
+**ProfileAI** est un agent IA intelligent propulsé par Claude Sonnet 4 qui génère automatiquement des fiches de profil professionnelles et complètes pour n'importe quelle personne. L'application orchestre plusieurs sources de données (Tavily Search, SerpAPI, Google Scholar) pour créer des profils riches avec photo, biographie, réseaux sociaux avec métriques, publications académiques, entreprises fondées, et prix/récompenses.
+
+**Fonctionnalité principale** : Profilage automatique - Entrez simplement un nom (ex: "Elon Musk") et obtenez instantanément une fiche ultra complète avec :
+- 📸 Photo de profil professionnelle
+- 📝 Biographie détaillée
+- 🌐 Liens vers tous les réseaux sociaux (Twitter, LinkedIn, GitHub, Medium, TikTok, Twitch, etc.) avec métriques en temps réel
+- 🏆 Prix et récompenses
+- 🏢 Entreprises fondées ou dirigées
+- 📚 Publications académiques avec citations
+- 🔗 Sites web pertinents
+
+**Design AgentiLab** : L'application utilise le système de design AgentiLab avec une palette de couleurs professionnelle, une typographie moderne (Space Grotesk + Inter), des animations Framer Motion fluides, et une approche dark-first pour une expérience utilisateur premium.
+
+## Fonctionnalités principales
+
+### Frontend
+- **Interface moderne** inspirée de Perplexity AI avec design épuré
+- **Barre de recherche** avec effet glass-morphism et animations fluides
+- **Streaming en temps réel** des réponses avec effet typewriter
+- **Affichage du processus** de recherche avec les 5 requêtes générées (collapsible pour ne pas bloquer la vue)
+- **Indicateur de progression** en temps réel avec compteur de requêtes terminées (ex: 3/5)
+- **Rendu markdown** avec `react-markdown` et `remark-gfm` pour un formatage riche
+- **Cartes de résultats** élégantes avec citations et sources vérifiées
+- **Mode sombre/clair** avec transitions fluides
+- **Design responsive** optimisé mobile et desktop
+- **Animations** subtiles avec Framer Motion
+
+### Backend
+- **Claude Sonnet 4** via appels HTTP directs (API Anthropic) avec SSE streaming
+- **Architecture d'agent** où Claude utilise des outils autonomes
+- **Workflow intelligent** : génération de 5 requêtes optimisées par question
+- **Recherche web** Tavily AI Search pour résultats de haute qualité
+- **Web crawler** avec Cheerio pour extraction de contenu
+- **Embeddings vectoriels** avec OpenAI text-embedding-3-large (3072 dimensions)
+- **Recherche sémantique** avec PostgreSQL et extension pgvector
+- **SerpAPI Integration** : recherche d'images, itinéraires Google Maps, produits Google Shopping
+- **Base de données** PostgreSQL avec tables crawledPages, embeddings, messages, personProfiles
+
+## Architecture technique
+
+### Stack
+- **Frontend**: React 18 + TypeScript + Vite + Tailwind CSS + shadcn/ui + Framer Motion
+- **Backend**: Node.js + Express + TypeScript
+- **Database**: PostgreSQL (Neon) avec extension pgvector
+- **AI**: Claude Sonnet 4 (via HTTP), OpenAI embeddings
+- **State Management**: TanStack Query v5
+
+### Workflow de recherche
+Pour chaque question utilisateur :
+1. **Génération de requêtes** : Claude génère 5 requêtes de recherche optimisées
+2. **Recherche Tavily** : Chaque requête est envoyée à Tavily AI Search
+3. **Affichage en temps réel** : Les résultats apparaissent au fur et à mesure
+4. **Synthèse** : Claude analyse tous les résultats et génère une réponse markdown
+
+### Outils de Claude
+L'agent IA peut utiliser les outils suivants (tous sont activement utilisés par Claude selon le contexte):
+
+**Outils de base:**
+1. **web_search(query)** - Recherche Tavily AI
+2. **web_crawl(url)** - Extraction de contenu web
+3. **query_vector(query)** - Recherche sémantique dans les contenus indexés (PostgreSQL pgvector)
+
+**Outils SerpAPI:**
+4. **image_search(query, limit)** - Recherche d'images via Google Images
+5. **map_directions(from, to)** - Itinéraires et directions via Google Maps
+6. **google_shopping(query, limit)** - Recherche de produits sur Google Shopping
+7. **finance_data(query)** - Données financières et cours de bourse via Google Finance
+8. **job_search(query, location)** - Recherche d'emplois via Google Jobs
+9. **flight_search(from, to, date)** - Recherche de vols via Google Flights
+10. **hotel_search(location, check_in, check_out)** - Recherche d'hôtels via Google Hotels
+11. **video_search(query, limit)** - Recherche de vidéos (YouTube, etc.)
+12. **google_trends(query)** - Données de tendances de recherche Google
+13. **google_scholar(query, limit)** - Recherche d'articles académiques
+14. **app_store_search(query, limit)** - Recherche d'applications iOS sur App Store
+
+**Outil de profilage:**
+15. **person_profile_search(name, additional_context)** - Génère un profil complet d'une personne (photo, bio, occupation, réseaux sociaux avec métriques, publications). Orchestre automatiquement Tavily search, SerpAPI images et Google Scholar.
+
+## Configuration
+
+### Variables d'environnement requises
+- `ANTHROPIC_API_KEY` - Clé API Anthropic pour Claude
+- `TAVILY_API_KEY` - Clé API Tavily pour recherche web
+- `OPENAI_API_KEY` - Clé API OpenAI pour embeddings
+- `SERPAPI_API_KEY` - Clé API SerpAPI pour recherche d'images, maps et shopping
+- `DATABASE_URL` - URL de connexion PostgreSQL (auto-configuré par Replit)
+
+### Installation
+```bash
+npm install
+npm run db:push  # Créer les tables de base de données
+npm run dev      # Démarrer l'application
+```
+
+## Endpoints API
+
+- `POST /api/search` - Recherche web Tavily
+- `POST /api/crawl` - Crawling de pages web
+- `POST /api/query` - Recherche vectorielle sémantique
+- `POST /api/chat` - Chat avec Claude (SSE streaming)
+  - Événements SSE : `status`, `search_queries`, `search_progress`, `search_result`, `text`, `tool_result`, `sources`, `done`, `error`
+
+## Structure du projet
+
+```
+├── client/
+│   ├── src/
+│   │   ├── components/      # Composants React réutilisables
+│   │   │   ├── streaming-answer.tsx   # Réponse streaming avec markdown
+│   │   │   ├── tool-results.tsx       # Affichage images, maps, produits
+│   │   │   └── ...
+│   │   ├── pages/          # Pages de l'application
+│   │   ├── hooks/          # Hooks personnalisés
+│   │   └── lib/            # Utilitaires
+├── server/
+│   ├── services/           # Services backend
+│   │   ├── claudeService.ts       # Intégration Claude via HTTP + génération de requêtes
+│   │   ├── tavilyService.ts       # Recherche web Tavily
+│   │   ├── crawlerService.ts      # Web scraping
+│   │   ├── embeddingService.ts    # OpenAI embeddings
+│   │   ├── vectorService.ts       # Recherche vectorielle
+│   │   ├── serpapiService.ts      # SerpAPI (images, maps, shopping)
+│   │   └── personProfileService.ts # Profilage de personnes (orchestration)
+│   ├── routes.ts           # Routes API
+│   ├── storage.ts          # Couche d'abstraction database
+│   └── db.ts              # Configuration database
+└── shared/
+    └── schema.ts          # Schémas Drizzle et types TypeScript
+```
+
+## Particularités d'implémentation
+
+### Claude via HTTP (non SDK)
+L'application utilise des appels HTTP directs à `https://api.anthropic.com/v1/messages` au lieu du SDK Anthropic, permettant un contrôle total sur les requêtes et le streaming SSE.
+
+### Streaming SSE
+Les réponses de Claude sont streamées en temps réel via Server-Sent Events, offrant une expérience utilisateur fluide avec effet typewriter.
+
+### Embeddings vectoriels
+- Modèle: `text-embedding-3-large` (3072 dimensions)
+- Stockage: PostgreSQL avec extension pgvector
+- Similarité: Distance cosinus pour recherche sémantique
+- Note: Le contenu crawlé est automatiquement tronqué si > 8192 tokens pour respecter la limite du modèle
+
+### Rendu markdown
+- Les réponses de Claude sont formatées en markdown
+- Rendu avec `react-markdown`, `remark-gfm` (GitHub Flavored Markdown) et `remark-breaks` (line breaks)
+- **Preprocessing Unicode** : Correction automatique des headings mal formatés avec regex Unicode `/([^\s\n])(#{1,6} )(?=[\p{Lu}\p{Lt}\p{Nd}\p{Emoji}])/gu` (@ts-ignore pour compatibilité TypeScript)
+  - Gère 95% des cas : majuscules (A-Z), majuscules accentuées (À, É, Œ), nombres (0-9), emojis
+  - Sépare "text# Résumé" en "text\n\n# Résumé" pour un rendu correct
+  - Limitation connue : ne détecte pas les headings commençant par minuscule (ex: "text# heading") pour éviter les faux positifs sur les hashtags inline
+- Styling personnalisé pour tous les éléments : headings, listes, liens, code, blockquotes
+- Support complet du mode sombre
+
+## Thème AgentiLab
+
+L'application utilise le système de design AgentiLab pour une identité visuelle professionnelle et moderne.
+
+### Couleurs principales
+- **Primary Blue**: #3B82F6 (217 91% 60%) - Couleur de marque principale
+- **Accent Teal**: #14B8A6 (174 69% 35%) - Accent pour badges tech et états actifs
+- **Dark-first**: Mode sombre par défaut avec backgrounds riches (210 6% 10%)
+- **Semantic colors**: Success (green), Warning (amber), Destructive (red)
+
+### Typographie
+- **Display**: Space Grotesk - Pour les titres et textes d'impact (H1-H3)
+- **Sans**: Inter - Pour le corps de texte et l'interface
+- **Mono**: JetBrains Mono - Pour le code et données techniques
+
+### Charts & Data Viz
+- Chart 1: Dark Blue (217 91% 35%)
+- Chart 2: Teal (174 69% 35%) - Accent AgentiLab
+- Chart 3: Green (142 76% 36%) - Success
+- Chart 4: Amber (38 92% 40%) - Warning
+- Chart 5: Purple (262 83% 45%)
+
+## Développement
+
+### Guidelines de design
+Voir `design_guidelines.md` pour les spécifications complètes du design system.
+
+### Tests
+L'application utilise des attributs `data-testid` pour faciliter les tests e2e avec Playwright.
+
+## Améliorations récentes
+
+### Partage de résultats (Octobre 2025)
+- **Liens de partage uniques** : Cristallisation des résultats de recherche dans un lien partageable permanent
+- **Bouton de partage intégré** : Bouton principal après chaque recherche pour créer et copier automatiquement le lien
+- **Page dédiée de visualisation** : Interface en lecture seule avec mention "Generated by AgentiLab"
+- **Stockage persistant** : Sauvegarde complète de la question, réponse, sources et résultats d'outils (images, maps, etc.)
+- **UX optimale** : Copie automatique du lien dans le presse-papier avec notification toast
+
+### UX optimisée (Octobre 2024)
+- **Search Queries Collapsibles** : Les requêtes de recherche sont maintenant dans un panneau repliable pour ne pas bloquer la vue pendant la recherche
+- **Indicateur de progression visible** : Barre de statut toujours visible avec animation de chargement
+- **Compteur de progression** : Affichage du nombre de requêtes terminées (ex: "3/5") dans l'en-tête du panneau
+- **UX non-intrusive** : L'utilisateur peut voir le processus sans être gêné par des boîtes vides qui occupent l'espace
+
+## Notes
+- Dark mode est le thème par défaut AgentiLab (avec toggle pour light mode)
+- L'application bind sur 0.0.0.0:5000
+- Le workflow "Start application" exécute `npm run dev`
+- **Toutes les fonctionnalités sont utilisées** : Vector embedding, SerpAPI tools, Tavily search - aucun code mort

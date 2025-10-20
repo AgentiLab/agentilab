@@ -1,0 +1,241 @@
+# AgentiLabook - AI-Powered Jupyter Studio
+
+**Slogan:** "Code, Explain, Generate - Anywhere"
+
+## Overview
+AgentiLabook is a cloud-native platform for creating, executing, and generating Jupyter notebooks with AI assistance. Built with React, TypeScript, and powered by GPT-5, it enables users to write code, execute Python, and leverage AI to generate complete notebooks or individual cells on any device.
+
+## Project Architecture
+
+### Frontend Stack
+- **Framework:** React 18 + TypeScript
+- **Styling:** Tailwind CSS + Shadcn UI components
+- **Code Editor:** CodeMirror 6 with Python and Markdown support
+- **State Management:** TanStack Query v5
+- **Routing:** Wouter
+- **Design System:** AgentiLab branding (Blue #3B82F6, Teal #14B8A6, Dark #0B0B0F)
+
+### Backend Stack
+- **Runtime:** Node.js + Express
+- **AI Integration:** Claude 3.5 Sonnet via Anthropic API (user's own API key)
+- **Python Execution:** Python 3.11 with matplotlib/plotly visualization support
+- **Real-time:** WebSocket for streaming execution results
+- **Storage:** PostgreSQL (Neon) with Drizzle ORM for persistent storage
+
+### Key Features Implemented
+1. **Notebook Management**
+   - Create new notebooks
+   - List all notebooks with metadata
+   - Edit notebook titles
+   - Auto-save every 10 seconds
+
+2. **Cell Operations**
+   - Code cells with Python syntax highlighting
+   - Markdown cells with rich text rendering
+   - Add/delete cells
+   - Execute code cells with real-time output
+   - Drag-and-drop reordering (UI ready)
+
+3. **AI-Powered Features**
+   - Generate complete notebooks from prompts
+   - Generate individual cells on demand
+   - Explain code with AI-generated markdown
+   - Floating AI chat panel
+
+4. **Execution & Output**
+   - Python code execution
+   - Support for stdout, execution results, display data
+   - Error handling with stack traces
+   - Visual output rendering (charts, images)
+
+5. **Export & Sharing**
+   - Export to .ipynb (Jupyter format)
+   - Share notebooks as HTML with permanent URLs
+   - Secure HTML sanitization using sanitize-html library
+   - Cell reordering with up/down arrow buttons
+   - Modern, responsive HTML export with gradient backgrounds and animations
+   - Compatible with Jupyter, Google Colab, VS Code
+
+6. **Mobile-First Design**
+   - Responsive layouts for mobile, tablet, desktop
+   - Touch-optimized interactions
+   - Dark mode by default with light mode toggle
+   - Floating action button for AI features
+
+## Data Model
+
+### Notebook Structure
+```typescript
+interface Notebook {
+  id: string;
+  title: string;
+  cells: NotebookCell[];
+  metadata: Record<string, any>;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+interface NotebookCell {
+  id: string;
+  type: "code" | "markdown";
+  source: string;
+  outputs?: CellOutput[];
+  execution_count?: number | null;
+  metadata?: Record<string, any>;
+}
+```
+
+## API Routes
+
+### Notebooks
+- `GET /api/notebooks` - List all notebooks
+- `GET /api/notebooks/:id` - Get notebook by ID
+- `POST /api/notebooks` - Create new notebook
+- `PUT /api/notebooks/:id` - Update notebook
+- `DELETE /api/notebooks/:id` - Delete notebook
+
+### AI Generation
+- `POST /api/generate-notebook` - Generate complete notebook from prompt
+- `POST /api/generate-cell` - Generate individual cell from prompt
+- `POST /api/explain-code` - Generate explanation for code
+
+### Execution
+- `POST /api/run-code` - Execute Python code
+- WebSocket `/ws` - Real-time execution streaming
+
+## Recent Changes
+
+### October 15, 2025 - HTML Sharing & Mobile Responsive Fix ✅
+- **HTML Sharing System**:
+  - Implemented permanent URL sharing for notebooks via `/shared/:shareId` route
+  - Created ShareDialog component with copy-to-clipboard functionality
+  - Save-before-share workflow to ensure latest changes are exported
+  - Secure HTML sanitization using sanitize-html library (prevents XSS attacks)
+  - Modern, responsive HTML export with:
+    - Gradient header with animations
+    - Professional typography (Inter + JetBrains Mono fonts)
+    - Improved markdown rendering with syntax highlighting
+    - Responsive cell outputs with proper formatting
+    - Footer with branding
+
+- **Cell Reordering**:
+  - Added up/down arrow buttons for each cell
+  - Visual feedback on hover with smooth transitions
+  - Disabled state for first/last cells
+
+- **Mobile Responsive Fix**:
+  - Fixed multi-column markdown layout issue on smartphones
+  - Enforced single-column layout with `column-count: 1 !important`
+  - Preserved list markers (bullets/numbers) with `display: list-item`
+  - Optimized font sizes and padding for mobile devices
+  - Edge-to-edge layout on mobile (removed unnecessary borders/shadows)
+  - Execution count repositioned above code blocks on small screens
+
+- **Security**:
+  - Battle-tested sanitize-html library with safe allowlist
+  - Blocks all script tags, event handlers, and dangerous protocols
+  - Allows safe HTML elements: headings, paragraphs, lists, tables, code, images
+  - Data URIs allowed only for images
+
+### October 15, 2025 - Database Migration ✅
+- Migrated from in-memory storage (MemStorage) to PostgreSQL with Drizzle ORM
+- Created `server/db.ts` with Neon PostgreSQL connection (WebSocket support via ws)
+- Implemented `DatabaseStorage` class with full CRUD operations:
+  - getAllNotebooks() - retrieves all notebooks ordered by updatedAt DESC
+  - getNotebook(id) - retrieves single notebook by UUID
+  - createNotebook() - creates notebook with auto-generated UUID and timestamps
+  - updateNotebook() - updates notebook with auto-updated timestamp
+  - deleteNotebook() - deletes notebook from database
+- Pushed schema to database using `npm run db:push`
+- Verified all operations with API tests and direct SQL queries
+- Data now persists across server restarts
+
+### Task 1 - Schema & Frontend ✅
+- Configured AgentiLab design system with teal accent (#14B8A6) color
+- Created complete data schema for notebooks, cells, and execution results
+- Built all React components with beautiful UI:
+  - NotebookList with empty states and create/generate actions
+  - NotebookEditor with auto-save (10s interval)
+  - CellEditor with CodeMirror integration for Python and Markdown
+  - CellOutput supporting multiple output types (stream, execute_result, display_data, error)
+  - AIChat floating panel for AI interactions
+  - ThemeProvider and ThemeToggle for dark/light mode
+- Implemented routing (Home, Notebook pages)
+- Added responsive design for mobile/tablet/desktop
+- Integrated dark mode support (default)
+
+### Task 2 - Backend ✅
+- Implemented complete storage interface (MemStorage) for notebooks
+- Created all API endpoints:
+  - GET/POST /api/notebooks - List and create notebooks
+  - GET/PUT/DELETE /api/notebooks/:id - Get, update, delete specific notebook
+  - POST /api/generate-notebook - AI-powered full notebook generation
+  - POST /api/generate-cell - AI-powered cell generation
+  - POST /api/explain-code - AI code explanation
+  - POST /api/run-code - Python code execution
+- Integrated GPT-5 via Replit AI Integrations (no API key required)
+- Implemented Python code execution with error handling
+- Set up WebSocket server on /ws for real-time streaming (future enhancement)
+
+### Task 3 - Integration & Testing ✅
+- Frontend fully connected to backend APIs
+- All mutations and queries implemented with proper error handling
+- Auto-save functionality working (10s interval)
+- Export to .ipynb format implemented
+- Loading and error states with beautiful UI
+- Database migration complete with all CRUD operations verified
+
+## Technical Implementation
+
+### AI Integration
+- Using **Claude 3.5 Sonnet** (claude-3-5-sonnet-20241022) via Anthropic API
+- User's own Anthropic API key stored securely in Replit Secrets
+- Structured JSON outputs for reliable parsing
+- Context-aware cell generation with notebook context
+- Code explanation feature generates markdown cells with educational content
+
+### Python Execution ✅ ENABLED
+- **Python 3.11** installed and configured
+- **Matplotlib, numpy, pandas, plotly** pre-installed for data science
+- **Matplotlib**: Automatic chart capture as PNG images (all figures captured separately)
+- **Plotly**: Interactive HTML charts with full interactivity (hover, zoom, pan)
+- Enhanced code wrapper for multi-library visualization support
+- 30-second timeout for safety
+- 1MB output buffer limit
+- Basic input validation for dangerous patterns
+- Support for stdout, stderr, and error handling
+- Execution counter for cell numbering
+
+**Local Development Configuration:**
+- Enabled by default in development mode (NODE_ENV=development)
+- Automatic activation in local/Replit environments
+- No manual configuration required
+
+**⚠️ CRITICAL SECURITY LIMITATION:**
+- **UNSANDBOXED execution - Remote Code Execution vulnerability**
+- Executes Python code directly on server without proper isolation
+- **Only use in trusted development/testing environments**
+- **NEVER deploy to production without proper containerization**
+
+**Security Features:**
+- Process isolation with spawn (basic)
+- Input validation for dangerous patterns
+- Resource limits (time, memory, output size)
+- **Production requirement**: Docker, E2B, Modal, or similar containerization
+
+### Data Flow
+1. User creates/generates notebook → Storage
+2. User edits cells → Local state → Auto-save to storage
+3. User runs code → Python executor → Output to cell
+4. User exports → Generate .ipynb format → Download
+
+## User Preferences
+- Dark mode preferred by default
+- Mobile-first approach for all UI components
+- AI-first workflow with prominent AI features
+- Clean, professional design following Material Design + AgentiLab branding
+
+## Next Steps
+- Restart workflow and test all features
+- Architect review of complete implementation
+- E2E testing of critical user journeys

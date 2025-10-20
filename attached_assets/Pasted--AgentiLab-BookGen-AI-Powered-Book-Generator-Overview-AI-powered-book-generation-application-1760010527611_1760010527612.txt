@@ -1,0 +1,205 @@
+# AgentiLab BookGen - AI-Powered Book Generator
+
+## Overview
+
+AI-powered book generation application using Claude Sonnet 4.5. The application allows users to create complete professional books with table of contents, detailed chapters, and PDF export, all in real-time streaming.
+
+## Key Features
+
+### ✨ Intelligent Generation
+- **Topic Analysis**: AI analyzes the provided topic and creates a coherent book structure
+- **Real-time Streaming**: Live visualization of content creation
+- **Multi-language**: Support for English, French, Spanish, German, Italian, Portuguese
+- **Customizable Chapters**: Choose between 3-12 chapters with automatic generation
+- **Detailed Content**: Comprehensive chapters with subsections
+
+### 🎨 AgentiLab Design
+- **Dark mode by default**: Premium interface with dark theme
+- **Light mode**: Easy toggle between light and dark modes
+- **Responsive**: Optimized for mobile, tablet and desktop
+- **Smooth animations**: Elegant transitions with Framer Motion
+- **Professional typography**: Space Grotesk (headings) + Inter (body) + JetBrains Mono (code)
+
+### 📖 Book Features
+- **Title page**: With author name and elegant title
+- **Table of contents**: Automatically generated with page numbering
+- **Complete chapters**: Detailed content with subsections
+- **Auto-collapse**: Completed sections automatically collapse to show current generation
+- **PDF Export**: Professional PDF with automatic page numbers in TOC
+
+## Technical Architecture
+
+### Frontend (React + TypeScript)
+- **Pages**: Home (form + streaming + download)
+- **Components**:
+  - `BookForm`: Input form (topic, language, author, chapter count)
+  - `StreamingDisplay`: Streaming display area
+  - `StreamingSection`: Individual section box with auto-collapse
+  - `ProgressIndicator`: Progress bar and status
+  - `PDFDownload`: Download section
+  - `ThemeToggle`: Dark/light mode toggle
+- **State Management**: React hooks + SSE events
+- **Styling**: Tailwind CSS + Shadcn UI + AgentiLab design tokens
+
+### Backend (Express + TypeScript)
+- **API Routes**:
+  - `POST /api/generate-book`: SSE endpoint for streaming generation
+- **Services**:
+  - `BookGeneratorService`: Generation orchestration with per-request isolation
+  - Anthropic client with Claude Sonnet 4.5
+- **PDF Generation**: PDFKit-based PDF creation with automatic TOC page numbering
+
+### Data Schema
+```typescript
+BookGenerationRequest {
+  topic: string        // Book topic
+  language: string     // Generation language
+  author: string       // Author name
+  chapterCount: number // Number of chapters (3-12)
+}
+
+BookStructure {
+  title: string        // Book title
+  chapters: Chapter[]
+}
+
+BookSection {
+  id: string
+  type: 'title' | 'toc' | 'chapter'
+  title: string
+  content: string
+  status: 'pending' | 'generating' | 'complete'
+  chapterNumber?: number
+}
+```
+
+## Generation Flow
+
+1. **User fills form** → Topic, language, author name, chapter count
+2. **Analysis and structure** → AI creates book structure (title + chapters)
+3. **Streaming generation**:
+   - Title page
+   - Table of contents
+   - Chapter 1 (streaming)
+   - Chapter 2 (streaming)
+   - ... up to selected chapter count
+4. **PDF Compilation** → Generate PDF with TOC page numbering
+5. **Download** → Download link available
+
+## SSE (Server-Sent Events)
+
+The API uses SSE for real-time streaming:
+
+### Event Types
+- `structure`: Generated book structure (title + chapters)
+- `section-start`: New section starting
+- `content-delta`: Streamed content fragment
+- `section-complete`: Section finished
+- `pdf-ready`: PDF ready with download URL
+- `error`: Error occurred
+- `complete`: Generation complete
+
+## Environment Variables
+
+```
+ANTHROPIC_API_KEY=sk-ant-...  # Anthropic API key (Claude)
+SESSION_SECRET=...            # Session secret
+```
+
+## Development
+
+### Installation
+```bash
+npm install
+```
+
+### Launch
+```bash
+npm run dev
+```
+
+Application starts on http://localhost:5000
+
+### File Structure
+```
+client/
+  src/
+    pages/
+      home.tsx              # Main page
+    components/
+      book-form.tsx         # Generation form
+      streaming-display.tsx # Streaming display
+      streaming-section.tsx # Individual section with auto-collapse
+      progress-indicator.tsx # Progress bar
+      pdf-download.tsx      # Download area
+      theme-toggle.tsx      # Dark/light toggle
+    
+server/
+  lib/
+    anthropic.ts           # Anthropic client
+  services/
+    book-generator.ts      # Generation service with PDF creation
+  routes.ts               # API routes
+
+shared/
+  schema.ts               # Shared TypeScript schemas
+
+public/                   # Generated PDF files (temporary)
+```
+
+## AgentiLab Design System
+
+### Colors
+- **Primary Blue**: `#3B82F6` - CTAs, links, interactive elements
+- **Accent Teal**: `#14B8A6` - Tech badges, AI indicators, success
+- **Success Green**: `#10B981` - Complete sections, confirmations
+- **Background Dark**: `210 6% 10%` - Main background (dark mode)
+- **Card**: `222 16% 16%` - Elevated surfaces
+
+### Typography
+- **Display**: Space Grotesk (headings, impactful titles)
+- **Sans**: Inter (body, interface)
+- **Mono**: JetBrains Mono (generated content, code)
+
+### Components
+- Shadcn UI with AgentiLab theme
+- Utility classes: `hover-elevate`, `active-elevate-2`
+- Responsive: mobile-first with Tailwind breakpoints
+
+## Mobile Optimizations
+
+- Single column form on mobile
+- Reduced padding for cards
+- Full-width buttons on small screens
+- Automatically reduced typography
+- Touch-friendly with appropriate touch targets
+
+## Recent Optimizations
+
+- **Request isolation**: Per-request section management for concurrent multi-user support
+- **Robust SSE**: Flushed headers, properly formatted events, stable connections
+- **No API duplication**: Streamed content stored and reused to eliminate redundant API calls
+- **Direct PDF export**: PDFKit-based PDF generation (no Puppeteer dependency)
+- **Auto-collapse**: Completed sections collapse automatically to show current generation
+- **Chapter count selection**: User can choose 3-12 chapters
+- **English interface**: All UI text in English
+- **Page-numbered TOC**: Automatic page numbering in PDF table of contents
+
+## Future Enhancements
+
+- Save generated book history
+- Manual content editing before export
+- Book templates (novel, guide, essay)
+- Multi-format export (EPUB, DOCX)
+- AI-generated book cover
+- Document style customization
+- More accurate PDF page numbering (currently estimates based on content flow)
+
+## Credits
+
+- **AI**: Claude Sonnet 4.5 (Anthropic)
+- **Design**: AgentiLab Brand Theme
+- **Fonts**: Google Fonts (Space Grotesk, Inter, JetBrains Mono)
+- **UI Components**: Shadcn UI + Radix UI
+- **Framework**: React, Express, TypeScript, Vite
+- **PDF Generation**: PDFKit

@@ -1,0 +1,208 @@
+# CPAai by agentilab - Comptable Numérique Intelligent
+
+Application de comptabilité autonome propulsée par Claude Sonnet 4.5 et Exa API.
+
+## Vue d'ensemble
+
+CPAai by agentilab est une application mobile-first de comptabilité intelligente qui permet à un utilisateur de:
+- Capturer des reçus avec la caméra mobile
+- Laisser l'agent AI analyser, classer et comptabiliser automatiquement
+- Tenir un grand livre complet avec double-entrée
+- Générer des états financiers automatiquement
+- Rechercher des règles fiscales en ligne avec Exa API
+
+## Architecture Technique
+
+### Stack
+- **Frontend**: React 18 + TypeScript + Vite + Tailwind CSS + Shadcn UI
+- **Backend**: Node.js + Express
+- **Base de données**: In-memory storage (MemStorage)
+- **Agent AI**: Claude Sonnet 4.5 (Anthropic)
+- **OCR**: Tesseract.js
+- **Recherche fiscale**: Exa API (Search + Crawler)
+
+### Structure du projet
+
+```
+/client                 # Frontend React
+  /src
+    /components        # Composants réutilisables
+      BottomNav.tsx   # Navigation mobile bottom bar
+      /ui             # Composants Shadcn
+    /pages            # Pages de l'application
+      Dashboard.tsx   # Grand livre et transactions
+      Upload.tsx      # Capture de reçus
+      Statements.tsx  # États financiers
+      Tax.tsx         # Recherche fiscale
+      Agent.tsx       # Console agent AI
+    /lib              # Utilitaires
+    /hooks            # React hooks
+
+/server                # Backend Node.js
+  /tools              # Outils de l'agent AI
+    claude-agent.ts   # Agent Claude avec parsing
+    ocr.ts           # Extraction OCR
+    exa.ts           # Recherche Exa API
+  routes.ts          # API routes
+  storage.ts         # Interface de stockage
+  
+/shared               # Code partagé
+  schema.ts          # Schémas Drizzle + Zod
+```
+
+## Fonctionnalités Principales
+
+### 1. Capture et Analyse de Reçus
+- Interface mobile avec caméra native
+- OCR automatique avec Tesseract.js
+- Parsing intelligent avec Claude Sonnet 4.5
+- Extraction: vendeur, date, montant, items, catégorie
+
+### 2. Comptabilité Automatique
+- Classification intelligente des transactions
+- Création d'écritures en double-entrée
+- Mise à jour automatique des soldes
+- Grand livre complet et équilibré
+
+### 3. États Financiers
+- Bilan (Balance Sheet)
+- État des Résultats (Income Statement)
+- Flux de Trésorerie (Cash Flow)
+- Génération automatique par période
+
+### 4. Recherche Fiscale
+- Recherche sémantique avec Exa API
+- Sources: CRA, Revenu Québec, IFRS, CPA Canada
+- Extraction et résumé automatique
+- Cache local des règles consultées
+
+### 5. Journal d'Agent AI
+- Logs en temps réel des actions
+- Statut des outils (OCR, Parser, Exa)
+- Métriques de performance
+- Historique complet d'audit
+
+## Schéma de Données
+
+### Tables principales
+- **accounts**: Plan comptable (actifs, passifs, capitaux, revenus, dépenses)
+- **transactions**: Transactions en double-entrée
+- **ledger_entries**: Écritures de journal automatiques
+- **reports**: États financiers générés
+- **tax_rules**: Cache des recherches Exa
+- **audit_logs**: Journal des actions de l'agent
+
+## API Endpoints
+
+### Comptabilité
+- `GET /api/accounts` - Liste des comptes
+- `GET /api/transactions` - Liste des transactions
+- `POST /api/transactions` - Créer une transaction
+- `GET /api/ledger-entries` - Écritures de journal
+
+### Intelligence AI
+- `POST /api/parse-receipt` - Analyser un reçu (multipart/form-data)
+- `GET /api/reports` - États financiers
+- `POST /api/tax-search` - Rechercher des règles fiscales
+
+### Audit
+- `GET /api/audit-logs` - Journal d'activité de l'agent
+
+## Agent AI Autonome
+
+L'agent Claude Sonnet 4.5 orchestre plusieurs outils avancés:
+
+1. **OCRReader**: Extraction de texte depuis images et PDFs
+2. **AccountingParser**: Classification et parsing comptable intelligent
+3. **LedgerUpdater**: Mise à jour du grand livre avec vérification
+4. **FinancialSynthesizer**: Génération d'états financiers automatiques
+5. **ExaSearchTool**: Recherche de règles fiscales en temps réel
+6. **ValidationAgent**: Vérification d'équilibre et conformité fiscale
+7. **AccountUpdater**: Modification de comptes existants
+8. **ReportGenerator**: Création de rapports personnalisés
+
+### Capacités Avancées de l'Agent
+
+**Recherche Fiscale Intelligente**
+- Détection automatique du besoin de recherche
+- Requêtes optimisées pour CRA, Revenu Québec, IFRS
+- Synthèse et cache des résultats
+
+**Mise à Jour de Comptes**
+- Modification de soldes avec vérification d'équilibre
+- Mise à jour de noms de comptes
+- Audit complet de toutes les modifications
+
+**Génération de Rapports**
+- Résumés fiscaux personnalisés
+- Analyses de variance revenus/dépenses
+- Rapports financiers personnalisés
+
+**Raisonnement Multi-Étapes**
+- Pensée analytique (thinking)
+- Recherche fiscale (search)
+- Décisions comptables (decision)
+- Vérification comptable (verification)
+- Actions automatiques (action)
+
+### Flux de traitement d'un reçu
+1. Utilisateur capture une photo
+2. OCR extrait le texte
+3. Claude analyse et structure les données
+4. Classification automatique du compte
+5. Création de l'écriture double-entrée
+6. Mise à jour des soldes
+7. Log d'audit créé
+
+## Design System
+
+### Couleurs
+- **Primary Blue**: `#3B82F6` (217 91% 60%)
+- **Teal Success**: `#14B8A6` (173 80% 40%)
+- **Dark Background**: `#1C2128` (222 47% 11%)
+- **Card Surface**: `#242C37` (222 47% 15%)
+
+### Typographie
+- **UI**: Inter (sans-serif)
+- **Montants**: JetBrains Mono (monospace)
+- **Tailles**: 12px - 36px avec hiérarchie claire
+
+### Composants
+- Navigation bottom bar fixe (5 onglets)
+- Cards avec hover-elevate et active-elevate-2
+- Skeleton loaders pour états de chargement
+- Toast notifications pour feedback
+
+## Variables d'environnement
+
+```
+ANTHROPIC_API_KEY=sk-...
+EXA_API_KEY=...
+```
+
+## Développement
+
+```bash
+# Installation
+npm install
+
+# Démarrage
+npm run dev
+
+# L'application tourne sur http://localhost:5000
+```
+
+## Limitations Actuelles
+- Storage en mémoire (données perdues au redémarrage)
+- Single-user (pas d'authentification)
+- Pas de multi-entreprises
+- Pas d'export PDF/T2
+
+## Roadmap Future
+- PostgreSQL pour persistence
+- Multi-entreprises via profiles
+- Intégration API bancaires
+- Export automatique T2/T1
+- Mode "Expert fiscal" avec Exa approfondi
+- Génération PDF pour dépôt officiel
+- PWA offline avec sync

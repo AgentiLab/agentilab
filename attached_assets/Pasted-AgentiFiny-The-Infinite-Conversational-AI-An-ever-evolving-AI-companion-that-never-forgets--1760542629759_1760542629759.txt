@@ -1,0 +1,205 @@
+AgentiFiny - The Infinite Conversational AI
+
+**"An ever-evolving AI companion that never forgets."**  
+Powered by Claude Sonnet 4.5, built by AgentiLab.ai
+
+---
+
+## Overview
+
+AgentiFiny is a perpetual AI agent designed to sustain a single, lifelong conversation with users. It never resets, never forgets, and continuously adapts to your tone, behavior, and intent — forming an emotional memory over time.
+
+## Current State (MVP Complete)
+
+### ✅ Implemented Features
+
+1. **Real-time Chat Interface**
+   - Beautiful, mobile-optimized chat UI with gradient animations
+   - WebSocket-powered real-time messaging
+   - Smooth message bubbles with typing indicators
+   - Auto-expanding text input with keyboard shortcuts
+
+2. **Live Emotional Metrics Dashboard**
+   - 4 animated metric cards displaying real-time analytics:
+     - **Mood**: User's detected emotional state
+     - **Stress**: Stress level indicator (0-100%)
+     - **Intent**: Conversation intent classification
+     - **Satisfaction**: User satisfaction score (0-100%)
+   - Smooth number transitions and progress bar animations
+   - Updates dynamically with each AI response
+
+3. **Claude Sonnet 4.5 Integration**
+   - Structured JSON responses with message + metrics
+   - Contextual conversation memory (last 20 messages)
+   - Emotional intelligence and nuanced understanding
+   - Reliable metric generation for user analytics
+
+4. **PostgreSQL Database**
+   - Full conversation persistence
+   - Message storage with emotional metadata
+   - Chronological message ordering
+   - Ready for future compression/summarization features
+
+5. **WebSocket Real-time Streaming**
+   - Bidirectional communication
+   - Instant message delivery
+   - Connection status indicator
+   - Error handling and reconnection
+
+---
+
+## Architecture
+
+### Tech Stack
+
+**Frontend:**
+- React + TypeScript
+- TailwindCSS + Shadcn UI components
+- Framer Motion for animations
+- Wouter for routing
+- TanStack Query for data fetching
+
+**Backend:**
+- Node.js + Express
+- WebSocket (ws library) for real-time communication
+- Anthropic Claude Sonnet 4.5 API
+- PostgreSQL (Neon) for persistence
+- Drizzle ORM
+
+### Design System
+
+Following AgentiLab brand theme:
+- **Primary Blue**: #3B82F6 (user messages, CTAs)
+- **Energetic Teal**: #14B8A6 (AI responses, accents)
+- **Dark Mode First**: Premium dark backgrounds with soft gradients
+- **Typography**: Inter for UI, JetBrains Mono for metrics
+- **Responsive**: Mobile-first, touch-optimized layouts
+
+---
+
+## Data Model
+
+### Messages Table
+```typescript
+{
+  id: varchar (UUID)
+  role: 'user' | 'assistant'
+  content: text
+  userEmotion: text (nullable)
+  stressLevel: real (0-1, nullable)
+  intentClass: text (nullable)
+  satisfactionScore: real (0-1, nullable)
+  agentConfidence: real (0-1, nullable)
+  createdAt: timestamp
+}
+```
+
+---
+
+## API Endpoints
+
+### REST API
+- `GET /api/messages` - Fetch all conversation messages
+
+### WebSocket
+- `ws://localhost:5000/ws` - Real-time chat connection
+  - Send: Plain text message
+  - Receive: JSON with `type`, `message`, and `metrics`
+
+---
+
+## User Preferences
+
+- **Dark mode only**: Application optimized for dark theme
+- **Mobile-first**: Primary target is smartphone users
+- **Real-time feedback**: Users expect immediate visual responses
+- **Emotional connection**: Metrics should feel meaningful, not intrusive
+
+---
+
+## Recent Changes (October 15, 2025)
+
+### Initial MVP Implementation
+1. Created complete database schema with message/metrics models
+2. Built all frontend components with stunning visual design
+3. Integrated Claude Sonnet 4.5 with structured JSON output
+4. Implemented WebSocket real-time communication
+5. Connected frontend to backend with live metric updates
+6. Added connection status indicator and error handling
+7. Deployed PostgreSQL database with Drizzle ORM
+
+---
+
+## Project Structure
+
+```
+├── client/
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── MetricCard.tsx      # Animated metric display
+│   │   │   ├── MessageBubble.tsx   # Chat message component
+│   │   │   ├── TypingIndicator.tsx # AI typing animation
+│   │   │   └── EmptyState.tsx      # Welcome screen
+│   │   ├── hooks/
+│   │   │   └── useWebSocket.ts     # WebSocket connection hook
+│   │   ├── pages/
+│   │   │   └── ChatPage.tsx        # Main chat interface
+│   │   └── index.css               # Design system tokens
+├── server/
+│   ├── routes.ts                   # WebSocket + API endpoints
+│   ├── anthropic.ts                # Claude integration
+│   ├── db.ts                       # Database connection
+│   └── storage.ts                  # Data access layer
+└── shared/
+    └── schema.ts                   # Shared TypeScript types
+```
+
+---
+
+## Future Roadmap
+
+### Phase 2: Infinite Memory
+- Implement intelligent conversation compression
+- Generate semantic embeddings for fast retrieval
+- Build two-tier memory (short-term + long-term summaries)
+- Add conversation timeline visualization
+
+### Phase 3: Advanced Features
+- Voice mode with speech recognition + TTS
+- Multi-persona AI (Analyst, Mentor, Therapist modes)
+- Memory visualization graph
+- Cloud sync API for AgentiLab ecosystem integration
+
+---
+
+## Development Commands
+
+```bash
+# Start development server
+npm run dev
+
+# Push database schema changes
+npm run db:push
+
+# Force database schema sync
+npm run db:push --force
+```
+
+---
+
+## Environment Variables
+
+Required secrets:
+- `ANTHROPIC_API_KEY` - Claude API key
+- `DATABASE_URL` - PostgreSQL connection string
+- All other database variables auto-configured
+
+---
+
+## Notes
+
+- Application runs on port 5000 (frontend + backend)
+- WebSocket uses `/ws` path to avoid HMR conflicts
+- Dark mode is permanent (no light mode toggle)
+- All animations follow 60fps performance standards
+- Design guidelines in `design_guidelines.md` are strictly followed

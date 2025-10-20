@@ -1,0 +1,239 @@
+# AgentiLaw.ai - Autonomous Legal Advisor
+
+## Overview
+AgentiLaw.ai is a professional legal AI advisor application powered by Claude Sonnet 4.5 and Exa Search API. It provides autonomous legal document analysis, contract generation, legal research, and case management capabilities.
+
+## Tech Stack
+- **Frontend**: React 18 + TypeScript + Tailwind CSS + shadcn/ui + Framer Motion
+- **Backend**: Express.js + Node.js
+- **AI**: Claude Sonnet 4.5 (Anthropic)
+- **Search**: Exa Search API for legal research
+- **Storage**: In-memory storage (MemStorage)
+- **Styling**: Dark mode first with professional law firm aesthetic
+
+## Features
+
+### 1. Case Management
+- Create and manage legal cases
+- Track case status (active, archived, closed)
+- Organize by case type (contract, litigation, advisory, compliance)
+- Case numbers and client tracking
+
+### 2. Document Analysis
+- Upload and analyze legal documents
+- AI-powered risk assessment (0-100 score)
+- Clause-by-clause analysis
+- Compliance checking
+- Document types: contracts, letters, agreements, memos
+
+### 3. Contract Generation
+- Pre-built templates (Partnership, NDA, Service Agreement)
+- AI-powered contract customization
+- Based on user requirements and legal best practices
+
+### 4. Legal Research
+- Powered by Exa Search API
+- Searches authoritative legal sources:
+  - CanLII (Canadian Legal Information Institute)
+  - justice.gouv.qc.ca
+  - legisquebec.gouv.qc.ca
+  - Supreme Court of Canada
+- Research history caching
+
+### 5. Legal Library
+- Browse Quebec and Canadian legislation
+- Article-level navigation
+- Searchable legal database
+- Direct links to official sources
+
+### 6. AI Agent Console
+- Chat interface with Claude Sonnet 4.5
+- **Autonomous Tool Execution:**
+  - `search_legal_web` - Legal research via Exa Search API
+  - `generate_contract` - Professional contract generation
+  - `analyze_document` - Document risk analysis
+- Multi-round streaming conversations
+- Real-time SSE (Server-Sent Events) streaming
+- Markdown rendering for rich responses
+- Optimistic UI for instant feedback
+- Legal advice and guidance
+- Document interpretation
+- Risk assessment
+
+## Design System
+
+### Colors
+- **Primary (Royal Blue)**: #2563EB - Trust, authority, CTAs
+- **Accent (Teal)**: #14B8A6 - Innovation, AI indicators
+- **Background**: Deep charcoal (#0d0d0f) - Professional dark theme
+- **Cards**: Subtle elevation (#1f1f1f)
+- **Text**: Silver (#E5E7EB) with opacity variants
+
+### Typography
+- **Primary Font**: Inter (400, 500, 600, 700)
+- **Display Font**: DM Sans (600, 700) - Headers
+- **Monospace**: JetBrains Mono - Case numbers, legal codes
+
+### Mobile-First Design
+- Bottom navigation with 5 sections
+- Swipeable card interfaces
+- Touch-optimized interactions
+- Responsive breakpoints
+
+## API Endpoints
+
+### Cases
+- `GET /api/cases` - List all cases
+- `GET /api/cases/:id` - Get case details
+- `POST /api/cases` - Create new case
+- `PATCH /api/cases/:id` - Update case
+- `DELETE /api/cases/:id` - Delete case
+
+### Documents
+- `GET /api/documents` - List documents (optional: ?caseId=xxx)
+- `GET /api/documents/:id` - Get document
+- `POST /api/documents` - Create document
+- `POST /api/documents/:id/analyze` - AI analysis
+- `PATCH /api/documents/:id` - Update document
+- `DELETE /api/documents/:id` - Delete document
+
+### Research
+- `GET /api/research` - Get research history
+- `POST /api/research/search` - Perform Exa search
+
+### Legislation
+- `GET /api/legislation` - List legislation
+- `POST /api/legislation` - Add legislation
+
+### AI Agent
+- `GET /api/messages` - Get message history (optional: ?caseId=xxx)
+- `POST /api/messages` - Send message and get response (non-streaming)
+- `GET /api/messages/stream?content=xxx` - Stream AI response with tool execution (SSE)
+
+### Templates
+- `GET /api/templates` - List contract templates
+- `GET /api/templates/:id` - Get template
+- `POST /api/contracts/generate` - Generate contract from template
+
+## Environment Variables
+- `ANTHROPIC_API_KEY` - Claude API key
+- `EXA_API_KEY` - Exa Search API key
+- `PORT` - Server port (default: 5000)
+
+## Development
+```bash
+npm run dev
+```
+
+## Architecture
+
+### Frontend Structure
+```
+client/src/
+├── components/
+│   ├── ui/ - shadcn components
+│   ├── MobileNav.tsx - Bottom navigation
+│   ├── CaseCard.tsx - Case display card
+│   ├── DocumentCard.tsx - Document card
+│   └── MessageBubble.tsx - Chat message
+├── pages/
+│   ├── Cases.tsx - Case management
+│   ├── Documents.tsx - Document studio
+│   ├── Legislation.tsx - Legal library
+│   ├── Agent.tsx - AI agent console
+│   └── Research.tsx - Legal research
+└── App.tsx - Main app & routing
+```
+
+### Backend Structure
+```
+server/
+├── services/
+│   ├── claude.ts - AI integration
+│   └── exa.ts - Search integration
+├── routes.ts - API endpoints
+├── storage.ts - Data storage
+└── seed.ts - Sample data
+```
+
+## Key Features Implementation
+
+### AI Agent with Autonomous Tools
+The AI Agent uses Claude Sonnet 4.5 with autonomous tool execution:
+
+**Tool 1: search_legal_web**
+- Searches legal databases via Exa Search API
+- Categories: legislation, jurisprudence, doctrine, general
+- Returns formatted results with sources
+
+**Tool 2: generate_contract**
+- Creates professional legal contracts
+- Supports: employment, partnership, NDA, service agreements
+- Quebec law compliance
+- Custom requirements integration
+
+**Tool 3: analyze_document**
+- AI-powered document analysis
+- Risk identification with severity levels (low/medium/high)
+- Overall risk score (0-100)
+- Compliance checking
+- Recommendations for improvement
+
+**Multi-Round Streaming:**
+1. User sends message via SSE GET request
+2. Claude analyzes and decides to use tools
+3. Backend executes tools and returns results
+4. Claude generates final response with tool context
+5. Full response streamed to frontend with Markdown formatting
+
+### Document Analysis (Standalone)
+Direct document analysis endpoint:
+- Summary of document
+- Risk identification with severity levels
+- Overall risk score (0-100)
+- Recommendations for improvement
+- Compliance issues
+
+### Legal Research (Standalone)
+Exa Search integration:
+- Search across authoritative legal sources
+- Filter by jurisdiction and category
+- Cache results for offline access
+- Provide source links
+
+### Contract Generation (Standalone)
+Template-based generation:
+- Pre-built legal templates
+- AI customization based on requirements
+- Quebec law compliance
+- Professional formatting
+
+## User Preferences
+- Dark mode first design
+- Mobile-optimized interface
+- Professional legal aesthetic
+- Smooth animations with Framer Motion
+- Glass-morphism effects
+- Touch-friendly interactions
+
+## Recent Changes
+
+### Latest Updates (October 2025)
+- **Anthropic Tools Integration**: Agent now autonomously uses tools for:
+  - Legal research (search_legal_web via Exa)
+  - Contract generation (generate_contract)
+  - Document analysis (analyze_document)
+- **Multi-Round Streaming**: SSE streaming with proper tool execution and follow-up responses
+- **Markdown Rendering**: Rich text formatting in agent responses (ReactMarkdown + remark-gfm)
+- **Optimistic UI**: Instant user message display while streaming
+- **Error Handling**: Proper SSE completion signaling with [DONE] sentinel
+- **French Support**: Agent responses and tools support French (Quebec legal context)
+
+### Initial Implementation
+- Full stack setup with React + Express + TypeScript
+- All 5 main sections implemented (Cases, Documents, Legislation, Agent, Research)
+- Claude Sonnet 4.5 integration with streaming support
+- Exa Search API integration for legal research
+- Complete mobile-first UI with bottom navigation
+- Professional dark theme with royal blue and teal accents
+- Sample data seeding for demonstration

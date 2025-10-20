@@ -1,0 +1,111 @@
+# AgentiMed.ai - Autonomous Medical Assistant
+
+## Overview
+AgentiMed.ai is a mobile-first medical diagnostic assistant powered by Claude Sonnet 4.5. It provides AI-powered differential diagnosis, symptom tracking, vital signs monitoring, and conversational health insights.
+
+**Purpose**: Personal health tracking and AI-assisted medical analysis for educational purposes
+**Tech Stack**: React + TypeScript, Express, Claude Sonnet 4.5, Exa API
+**Status**: MVP Complete (October 2025)
+
+## Recent Changes
+- **2025-10-14**: Initial implementation
+  - Complete medical data schema with vitals, symptoms, diagnoses, chat, test results
+  - Claude Sonnet 4.5 integration for differential diagnosis and chat
+  - Exa API integration for medical research and guidelines
+  - Mobile-first UI with medical blue/green theme
+  - All CRUD endpoints implemented with in-memory storage
+  - Fixed array validation in diagnosis recommendations
+
+## Project Architecture
+
+### Frontend (`client/src/`)
+- **Pages**: Dashboard, Vitals, Symptoms, Diagnosis, AI Assistant
+- **Components**: Sidebar navigation, Theme toggle, Medical cards
+- **State**: TanStack Query for server state management
+- **Design**: Medical blue (#2563EB) / Health green (#10B981) theme
+
+### Backend (`server/`)
+- **Storage**: In-memory storage (MemStorage) for all medical data
+- **Routes**: RESTful API for vitals, symptoms, diagnoses, chat, test results
+- **AI Integration**: 
+  - Claude Sonnet 4.5 for differential diagnosis generation
+  - Claude for conversational medical assistant
+  - Exa API for medical research and protocol search
+
+### Data Models
+- **PatientProfile**: Age, sex, height, weight, medical history
+- **Vitals**: Blood pressure, heart rate, temperature, SpO2, glucose
+- **Symptoms**: Description, intensity, duration
+- **Diagnoses**: Condition, probability, ICD-10, reasoning, recommendations
+- **ChatMessages**: User/assistant conversation history
+- **TestResults**: Lab results and measurements
+
+## Key Features
+1. **Vital Signs Tracking**: Record and monitor health metrics with status indicators
+2. **Symptom Tracker**: Quick add common symptoms or custom descriptions
+3. **Differential Diagnosis**: AI-powered analysis with probability rankings
+4. **AI Assistant**: Chat with Claude for health insights and questions
+5. **Medical Research**: Automatic fetching of latest guidelines via Exa API
+6. **Dark/Light Mode**: Full theme support optimized for medical UI
+
+## API Endpoints
+
+### Vitals
+- `GET /api/vitals/latest` - Get most recent vital signs
+- `GET /api/vitals` - Get all vital sign records
+- `POST /api/vitals` - Record new vital signs
+
+### Symptoms
+- `GET /api/symptoms` - Get all symptoms
+- `POST /api/symptoms` - Record new symptom
+
+### Diagnoses
+- `GET /api/diagnoses` - Get all diagnoses
+- `POST /api/diagnoses/generate` - Generate new AI diagnosis
+
+### Chat
+- `GET /api/chat` - Get conversation history
+- `POST /api/chat` - Send message to AI assistant
+
+### Test Results
+- `GET /api/test-results` - Get all test results
+- `POST /api/test-results` - Record new test result
+
+### Patient Profile
+- `GET /api/profile` - Get patient profile
+- `POST /api/profile` - Create or update profile
+
+## Environment Variables
+- `ANTHROPIC_API_KEY` - Claude Sonnet 4.5 API key (required)
+- `EXA_API_KEY` - Exa search API key (required)
+- `SESSION_SECRET` - Session encryption (configured)
+
+## Medical Safety
+⚠️ **Important Disclaimers**:
+- This system is for informational and educational purposes only
+- Not a substitute for professional medical advice
+- Always consult healthcare professionals for medical decisions
+- All pages and chat interactions include safety warnings
+
+## Design Guidelines
+Following Apple HIG with health app influences:
+- Mobile-first responsive design
+- Touch-optimized inputs (min 44px targets)
+- Clean clinical aesthetic
+- Color-coded health status indicators
+- WCAG AAA accessibility compliance
+- Smooth, calm animations
+
+## Running the Project
+```bash
+npm run dev
+```
+Application runs on port 5000 with hot reload enabled.
+
+## Future Enhancements
+- OCR for importing paper test results
+- Voice input for symptom reporting
+- PDF export for medical reports
+- Bluetooth device integration
+- Medication tracking and reminders
+- Chronic condition trend analysis
